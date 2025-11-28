@@ -22,6 +22,11 @@ class Settings(BaseSettings):
     app_name: str = "Supermarket Task Server"
     debug: bool = False
 
+    # JWT settings
+    secret_key: str = "your-secret-key-change-in-production"
+    algorithm: str = "HS256"
+    access_token_expire_minutes: int = 30
+
     @property
     def database_url(self) -> str:
         """Generate SQLAlchemy database URL for Aurora MySQL."""

@@ -12,6 +12,8 @@ sqlalchemy = "*"
 pymysql = "*"
 alembic = "*"
 cryptography = "*"
+passlib = {extras = ["bcrypt"], version = "*"}
+python-jose = {extras = ["cryptography"], version = "*"}
 
 [dev-packages]
 pytest = "*"
