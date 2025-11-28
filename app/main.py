@@ -20,12 +20,6 @@ app.include_router(shops_router)
 app.include_router(shop_settlements_router)
 
 
-@app.get("/")
-def root():
-    """Root endpoint."""
-    return {"message": "Welcome to Supermarket Task Server API"}
-
-
 @app.get("/health")
 def health_check():
     """Health check endpoint."""
