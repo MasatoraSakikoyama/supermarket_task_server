@@ -5,7 +5,9 @@ from typing import List
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
+from app.auth import get_current_account
 from app.database import get_db
+from app.models.account import Account
 from app.models.shop import Shop
 from app.schemas.shop import ShopCreate, ShopResponse, ShopUpdate
 
@@ -13,14 +15,23 @@ router = APIRouter(prefix="/shops", tags=["shops"])
 
 
 @router.get("/", response_model=List[ShopResponse])
-def get_shops(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+def get_shops(
+    skip: int = 0,
+    limit: int = 100,
+    db: Session = Depends(get_db),
+    current_account: Account = Depends(get_current_account),
+):
     """Get all shops with pagination."""
     shops = db.query(Shop).offset(skip).limit(limit).all()
     return shops
 
 
 @router.get("/{shop_id}", response_model=ShopResponse)
-def get_shop(shop_id: int, db: Session = Depends(get_db)):
+def get_shop(
+    shop_id: int,
+    db: Session = Depends(get_db),
+    current_account: Account = Depends(get_current_account),
+):
     """Get a single shop by ID."""
     shop = db.query(Shop).filter(Shop.id == shop_id).first()
     if shop is None:
@@ -31,7 +42,11 @@ def get_shop(shop_id: int, db: Session = Depends(get_db)):
 
 
 @router.post("/", response_model=ShopResponse, status_code=status.HTTP_201_CREATED)
-def create_shop(shop_data: ShopCreate, db: Session = Depends(get_db)):
+def create_shop(
+    shop_data: ShopCreate,
+    db: Session = Depends(get_db),
+    current_account: Account = Depends(get_current_account),
+):
     """Create a new shop."""
     shop = Shop(**shop_data.model_dump())
     db.add(shop)
@@ -41,7 +56,12 @@ def create_shop(shop_data: ShopCreate, db: Session = Depends(get_db)):
 
 
 @router.put("/{shop_id}", response_model=ShopResponse)
-def update_shop(shop_id: int, shop_data: ShopUpdate, db: Session = Depends(get_db)):
+def update_shop(
+    shop_id: int,
+    shop_data: ShopUpdate,
+    db: Session = Depends(get_db),
+    current_account: Account = Depends(get_current_account),
+):
     """Update an existing shop."""
     shop = db.query(Shop).filter(Shop.id == shop_id).first()
     if shop is None:
@@ -59,7 +79,11 @@ def update_shop(shop_id: int, shop_data: ShopUpdate, db: Session = Depends(get_d
 
 
 @router.delete("/{shop_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_shop(shop_id: int, db: Session = Depends(get_db)):
+def delete_shop(
+    shop_id: int,
+    db: Session = Depends(get_db),
+    current_account: Account = Depends(get_current_account),
+):
     """Delete a shop."""
     shop = db.query(Shop).filter(Shop.id == shop_id).first()
     if shop is None:

@@ -12,6 +12,10 @@ sqlalchemy = "*"
 pymysql = "*"
 alembic = "*"
 cryptography = "*"
+pyjwt = "*"
+redis = "*"
+passlib = {extras = ["bcrypt"], version = "*"}
+email-validator = "*"
 
 [dev-packages]
 pytest = "*"
