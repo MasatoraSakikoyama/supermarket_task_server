@@ -27,6 +27,17 @@ DB_USER=your_db_user
 DB_PASSWORD=your_db_password
 DB_NAME=supermarket
 DEBUG=false
+
+# Redis settings
+REDIS_HOST=localhost
+REDIS_PORT=6379
+REDIS_DB=0
+REDIS_PASSWORD=
+
+# JWT settings
+JWT_SECRET_KEY=your-secret-key-change-in-production
+JWT_ALGORITHM=HS256
+JWT_ACCESS_TOKEN_EXPIRE_MINUTES=30
 ```
 
 ### Database migrations
@@ -63,13 +74,31 @@ The Lambda handler is exposed as `app.main.handler`.
 
 ## API endpoints
 
+### Authentication (No login required)
+- `POST /auth/register` - Register a new user
+- `POST /auth/login` - Login and get access token
+
+### Authentication (Login required)
+- `POST /auth/logout` - Logout and invalidate token
+- `GET /auth/me` - Get current user information
+
+### Public endpoints
 - `GET /` - Root endpoint
 - `GET /health` - Health check
-- `GET /items` - List all items
-- `GET /items/{item_id}` - Get item by ID
-- `POST /items` - Create a new item
-- `PUT /items/{item_id}` - Update an item
-- `DELETE /items/{item_id}` - Delete an item
+
+### Shops (Login required)
+- `GET /shops` - List all shops
+- `GET /shops/{shop_id}` - Get shop by ID
+- `POST /shops` - Create a new shop
+- `PUT /shops/{shop_id}` - Update a shop
+- `DELETE /shops/{shop_id}` - Delete a shop
+
+### Shop Settlements (Login required)
+- `GET /shops/{shop_id}/settlements` - List all settlements for a shop
+- `GET /shops/{shop_id}/settlements/{settlement_id}` - Get settlement by ID
+- `POST /shops/{shop_id}/settlements` - Create a new settlement
+- `PUT /shops/{shop_id}/settlements/{settlement_id}` - Update a settlement
+- `DELETE /shops/{shop_id}/settlements/{settlement_id}` - Delete a settlement
 
 ## Project structure
 
