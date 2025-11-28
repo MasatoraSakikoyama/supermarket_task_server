@@ -82,10 +82,6 @@ The Lambda handler is exposed as `app.main.handler`.
 - `POST /auth/logout` - Logout and invalidate token
 - `GET /auth/me` - Get current user information
 
-### Public endpoints
-- `GET /` - Root endpoint
-- `GET /health` - Health check
-
 ### Shops (Login required)
 - `GET /shops` - List all shops
 - `GET /shops/{shop_id}` - Get shop by ID
