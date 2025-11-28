@@ -1,14 +1,14 @@
-"""SQLAlchemy models for the application."""
+"""SQLAlchemy models for the shop."""
 
 from sqlalchemy import Column, DateTime, Integer, String, func
 
 from app.database import Base
 
 
-class Settlement(Base):
-    """Example settlement model for demonstration."""
+class Shop(Base):
+    """Shop model for demonstration."""
 
-    __tablename__ = "settlements"
+    __tablename__ = "shops"
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(255), nullable=False, index=True)

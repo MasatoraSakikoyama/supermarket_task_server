@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from mangum import Mangum
 
 from app.config import get_settings
-from app.routers import settlements_router
+from app.routers import shop_settlements_router, shops_router
 
 settings = get_settings()
 
@@ -15,7 +15,8 @@ app = FastAPI(
 )
 
 # Include routers
-app.include_router(settlements_router)
+app.include_router(shops_router)
+app.include_router(shop_settlements_router)
 
 
 @app.get("/")
