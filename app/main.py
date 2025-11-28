@@ -20,11 +20,5 @@ app.include_router(shops_router)
 app.include_router(shop_settlements_router)
 
 
-@app.get("/health")
-def health_check():
-    """Health check endpoint."""
-    return {"status": "healthy"}
-
-
 # AWS Lambda handler using Mangum
 handler = Mangum(app)
