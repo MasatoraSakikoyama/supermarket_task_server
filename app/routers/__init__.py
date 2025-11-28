@@ -1,5 +1,5 @@
 """Routers package."""
 
-from app.routers.items import router as items_router
+from app.routers.settlements import router as settlements_router
 
-__all__ = ["items_router"]
+__all__ = ["settlements_router"]

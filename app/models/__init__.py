@@ -1,5 +1,5 @@
 """Models package."""
 
-from app.models.item import Item
+from app.models.settlement import Settlement
 
-__all__ = ["Item"]
+__all__ = ["Settlement"]

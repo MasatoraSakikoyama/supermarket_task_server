@@ -6,28 +6,28 @@ from typing import Optional
 from pydantic import BaseModel, ConfigDict
 
 
-class ItemBase(BaseModel):
-    """Base schema for Item."""
+class SettlementBase(BaseModel):
+    """Base schema for Settlement."""
 
     name: str
     description: Optional[str] = None
 
 
-class ItemCreate(ItemBase):
-    """Schema for creating an Item."""
+class SettlementCreate(SettlementBase):
+    """Schema for creating a Settlement."""
 
     pass
 
 
-class ItemUpdate(BaseModel):
-    """Schema for updating an Item."""
+class SettlementUpdate(BaseModel):
+    """Schema for updating a Settlement."""
 
     name: Optional[str] = None
     description: Optional[str] = None
 
 
-class ItemResponse(ItemBase):
-    """Schema for Item response."""
+class SettlementResponse(SettlementBase):
+    """Schema for Settlement response."""
 
     model_config = ConfigDict(from_attributes=True)
 
