@@ -1,5 +1,20 @@
 """Schemas package."""
 
-from app.schemas.item import ItemBase, ItemCreate, ItemResponse, ItemUpdate
+from app.schemas.shop import ShopBase, ShopCreate, ShopResponse, ShopUpdate
+from app.schemas.shop_settlement import (
+    ShopSettlementBase,
+    ShopSettlementCreate,
+    ShopSettlementResponse,
+    ShopSettlementUpdate,
+)
 
-__all__ = ["ItemBase", "ItemCreate", "ItemUpdate", "ItemResponse"]
+__all__ = [
+    "ShopBase",
+    "ShopCreate",
+    "ShopUpdate",
+    "ShopResponse",
+    "ShopSettlementBase",
+    "ShopSettlementCreate",
+    "ShopSettlementUpdate",
+    "ShopSettlementResponse",
+]

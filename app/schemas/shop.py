@@ -1,4 +1,4 @@
-"""Pydantic schemas for request/response validation."""
+"""Pydantic schemas for shop request/response validation."""
 
 from datetime import datetime
 from typing import Optional
@@ -6,28 +6,28 @@ from typing import Optional
 from pydantic import BaseModel, ConfigDict
 
 
-class ItemBase(BaseModel):
-    """Base schema for Item."""
+class ShopBase(BaseModel):
+    """Base schema for Shop."""
 
     name: str
     description: Optional[str] = None
 
 
-class ItemCreate(ItemBase):
-    """Schema for creating an Item."""
+class ShopCreate(ShopBase):
+    """Schema for creating a Shop."""
 
     pass
 
 
-class ItemUpdate(BaseModel):
-    """Schema for updating an Item."""
+class ShopUpdate(BaseModel):
+    """Schema for updating a Shop."""
 
     name: Optional[str] = None
     description: Optional[str] = None
 
 
-class ItemResponse(ItemBase):
-    """Schema for Item response."""
+class ShopResponse(ShopBase):
+    """Schema for Shop response."""
 
     model_config = ConfigDict(from_attributes=True)
 
