@@ -67,9 +67,7 @@ def create_shop_settlement(
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Shop not found"
         )
-    settlement_dict = settlement_data.model_dump()
-    settlement_dict["shop_id"] = shop_id
-    settlement = ShopSettlement(**settlement_dict)
+    settlement = ShopSettlement(shop_id=shop_id, **settlement_data.model_dump())
     db.add(settlement)
     db.commit()
     db.refresh(settlement)
@@ -100,8 +98,6 @@ def update_shop_settlement(
         )
 
     update_data = settlement_data.model_dump(exclude_unset=True)
-    # Remove shop_id from update if present to prevent changing parent
-    update_data.pop("shop_id", None)
     for field, value in update_data.items():
         setattr(settlement, field, value)
 

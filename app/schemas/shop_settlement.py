@@ -9,7 +9,6 @@ from pydantic import BaseModel, ConfigDict
 class ShopSettlementBase(BaseModel):
     """Base schema for ShopSettlement."""
 
-    shop_id: int
     name: str
     description: Optional[str] = None
 
@@ -23,7 +22,6 @@ class ShopSettlementCreate(ShopSettlementBase):
 class ShopSettlementUpdate(BaseModel):
     """Schema for updating a ShopSettlement."""
 
-    shop_id: Optional[int] = None
     name: Optional[str] = None
     description: Optional[str] = None
 
@@ -34,5 +32,6 @@ class ShopSettlementResponse(ShopSettlementBase):
     model_config = ConfigDict(from_attributes=True)
 
     id: int
+    shop_id: int
     created_at: datetime
     updated_at: datetime
