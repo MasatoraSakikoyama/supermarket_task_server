@@ -71,6 +71,8 @@ def authenticate_user(db: Session, username: str, password: str) -> Optional[Use
     """Authenticate a user by username and password."""
     user = db.query(User).filter(User.username == username).first()
     if not user:
+        # Use dummy hash to prevent timing attacks
+        pwd_context.verify("dummy_password", get_password_hash("dummy_hash"))
         return None
     if not verify_password(password, user.hashed_password):
         return None

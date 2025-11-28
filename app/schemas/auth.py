@@ -10,7 +10,7 @@ class UserBase(BaseModel):
     """Base schema for User."""
 
     username: str
-    email: str
+    email: EmailStr
 
 
 class UserCreate(UserBase):

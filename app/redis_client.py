@@ -8,16 +8,27 @@ from app.config import get_settings
 
 settings = get_settings()
 
+# Redis connection pool for better performance
+_redis_pool: Optional[redis.ConnectionPool] = None
+
+
+def get_redis_pool() -> redis.ConnectionPool:
+    """Get Redis connection pool (singleton)."""
+    global _redis_pool
+    if _redis_pool is None:
+        _redis_pool = redis.ConnectionPool(
+            host=settings.redis_host,
+            port=settings.redis_port,
+            db=settings.redis_db,
+            password=settings.redis_password if settings.redis_password else None,
+            decode_responses=True,
+        )
+    return _redis_pool
+
 
 def get_redis_client() -> redis.Redis:
-    """Get Redis client instance."""
-    return redis.Redis(
-        host=settings.redis_host,
-        port=settings.redis_port,
-        db=settings.redis_db,
-        password=settings.redis_password if settings.redis_password else None,
-        decode_responses=True,
-    )
+    """Get Redis client instance with connection pooling."""
+    return redis.Redis(connection_pool=get_redis_pool())
 
 
 def store_token(user_id: int, token: str, expire_seconds: int) -> bool:
