@@ -5,11 +5,11 @@ from typing import List
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
-from app.auth import get_current_user
+from app.auth import get_current_account
 from app.database import get_db
+from app.models.account import Account
 from app.models.shop import Shop
 from app.models.shop_settlement import ShopSettlement
-from app.models.user import User
 from app.schemas.shop_settlement import (
     ShopSettlementCreate,
     ShopSettlementResponse,
@@ -25,7 +25,7 @@ def get_shop_settlements(
     skip: int = 0,
     limit: int = 100,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user),
+    current_account: Account = Depends(get_current_account),
 ):
     """Get all settlements for a shop with pagination."""
     shop = db.query(Shop).filter(Shop.id == shop_id).first()
@@ -48,7 +48,7 @@ def get_shop_settlement(
     shop_id: int,
     settlement_id: int,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user),
+    current_account: Account = Depends(get_current_account),
 ):
     """Get a single settlement by ID for a shop."""
     shop = db.query(Shop).filter(Shop.id == shop_id).first()
@@ -73,7 +73,7 @@ def create_shop_settlement(
     shop_id: int,
     settlement_data: ShopSettlementCreate,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user),
+    current_account: Account = Depends(get_current_account),
 ):
     """Create a new settlement for a shop."""
     shop = db.query(Shop).filter(Shop.id == shop_id).first()
@@ -94,7 +94,7 @@ def update_shop_settlement(
     settlement_id: int,
     settlement_data: ShopSettlementUpdate,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user),
+    current_account: Account = Depends(get_current_account),
 ):
     """Update an existing settlement for a shop."""
     shop = db.query(Shop).filter(Shop.id == shop_id).first()
@@ -126,7 +126,7 @@ def delete_shop_settlement(
     shop_id: int,
     settlement_id: int,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user),
+    current_account: Account = Depends(get_current_account),
 ):
     """Delete a settlement for a shop."""
     shop = db.query(Shop).filter(Shop.id == shop_id).first()

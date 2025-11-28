@@ -1,12 +1,12 @@
 """Schemas package."""
 
 from app.schemas.auth import (
+    AccountBase,
+    AccountCreate,
+    AccountResponse,
     LoginRequest,
     TokenData,
     TokenResponse,
-    UserBase,
-    UserCreate,
-    UserResponse,
 )
 from app.schemas.shop import ShopBase, ShopCreate, ShopResponse, ShopUpdate
 from app.schemas.shop_settlement import (
@@ -28,7 +28,7 @@ __all__ = [
     "LoginRequest",
     "TokenData",
     "TokenResponse",
-    "UserBase",
-    "UserCreate",
-    "UserResponse",
+    "AccountBase",
+    "AccountCreate",
+    "AccountResponse",
 ]

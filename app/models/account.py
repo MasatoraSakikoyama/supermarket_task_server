@@ -1,14 +1,14 @@
-"""SQLAlchemy models for the user."""
+"""SQLAlchemy models for the account."""
 
 from sqlalchemy import Column, DateTime, Integer, String, func
 
 from app.database import Base
 
 
-class User(Base):
-    """User model for authentication."""
+class Account(Base):
+    """Account model for authentication."""
 
-    __tablename__ = "users"
+    __tablename__ = "accounts"
 
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String(255), nullable=False, unique=True, index=True)
