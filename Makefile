@@ -7,12 +7,21 @@ migrate:
 	pipenv run alembic upgrade head
 
 revision:
+ifndef m
+	$(error Usage: make revision m="your migration message")
+endif
 	pipenv run alembic revision --autogenerate -m "$(m)"
 
 upgrade:
+ifndef rev
+	$(error Usage: make upgrade rev=<revision>)
+endif
 	pipenv run alembic upgrade $(rev)
 
 downgrade:
+ifndef rev
+	$(error Usage: make downgrade rev=<revision>)
+endif
 	pipenv run alembic downgrade $(rev)
 
 history:
