@@ -32,7 +32,7 @@ class UserResponse(UserBase):
 class LoginRequest(BaseModel):
     """Schema for login request."""
 
-    username: str
+    email: EmailStr
     password: str
 
 

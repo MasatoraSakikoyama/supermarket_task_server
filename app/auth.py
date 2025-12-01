@@ -72,11 +72,11 @@ def decode_access_token(token: str) -> Optional[TokenData]:
 
 def authenticate_user(
     db: Session,
-    username: str,
+    email: str,
     password: str,
 ) -> Optional[User]:
-    """Authenticate an user by username and password."""
-    user = db.query(User).filter(User.username == username).first()
+    """Authenticate a user by email and password."""
+    user = db.query(User).filter(User.email == email).first()
     if not user:
         # Use dummy hash to prevent timing attacks
         pwd_context.verify("dummy_password", get_password_hash("dummy_hash"))
