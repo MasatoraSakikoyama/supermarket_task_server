@@ -16,19 +16,19 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=ENV_FILE, env_file_encoding="utf-8")
 
     # Database settings for AWS Aurora MySQL
-    db_host: str = "localhost"
+    db_host: str = ""
     db_port: int = 3306
-    db_user: str = "root"
+    db_user: str = ""
     db_password: str = ""
-    db_name: str = "supermarket"
+    db_name: str = ""
 
     # DynamoDB settings
-    dynamodb_table_name: str = "user_tokens"
-    dynamodb_region: str = "ap-northeast-1"
+    dynamodb_table_name: str = ""
+    dynamodb_region: str = ""
     dynamodb_endpoint_url: str = ""
 
     # JWT settings
-    jwt_secret_key: str = "your-secret-key-change-in-production"
+    jwt_secret_key: str = ""
     jwt_algorithm: str = "HS256"
     jwt_access_token_expire_minutes: int = 30
 
