@@ -13,7 +13,7 @@ pymysql = "*"
 alembic = "*"
 cryptography = "*"
 pyjwt = "*"
-redis = "*"
+boto3 = "*"
 passlib = {extras = ["bcrypt"], version = "*"}
 email-validator = "*"
 

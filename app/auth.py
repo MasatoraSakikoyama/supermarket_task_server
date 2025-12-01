@@ -12,7 +12,7 @@ from sqlalchemy.orm import Session
 from app.config import get_settings
 from app.database import get_db
 from app.models.user import User
-from app.redis_client import is_token_valid
+from app.dynamodb_client import is_token_valid
 from app.schemas.auth import TokenData
 
 settings = get_settings()

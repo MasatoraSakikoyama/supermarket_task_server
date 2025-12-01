@@ -28,17 +28,23 @@ DB_PASSWORD=your_db_password
 DB_NAME=supermarket
 DEBUG=false
 
-# Redis settings
-REDIS_HOST=localhost
-REDIS_PORT=6379
-REDIS_DB=0
-REDIS_PASSWORD=
+# DynamoDB settings
+DYNAMODB_TABLE_NAME=user_tokens
+DYNAMODB_REGION=ap-northeast-1
+DYNAMODB_ENDPOINT_URL=
 
 # JWT settings
 JWT_SECRET_KEY=your-secret-key-change-in-production
 JWT_ALGORITHM=HS256
 JWT_ACCESS_TOKEN_EXPIRE_MINUTES=30
 ```
+
+### DynamoDB Table Setup
+
+Create a DynamoDB table with the following configuration:
+- Table name: `user_tokens` (or value of `DYNAMODB_TABLE_NAME`)
+- Partition key: `user_id` (String)
+- Enable TTL on the `ttl` attribute for automatic token expiration
 
 ### Database migrations
 
