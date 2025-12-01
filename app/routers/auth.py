@@ -14,7 +14,7 @@ from app.auth import (
 from app.config import get_settings
 from app.database import get_db
 from app.models.user import User
-from app.redis_client import delete_token, store_token
+from app.dynamodb_client import delete_token, store_token
 from app.schemas.auth import UserCreate, UserResponse, LoginRequest, TokenResponse
 
 settings = get_settings()
@@ -72,7 +72,7 @@ def login(login_data: LoginRequest, db: Session = Depends(get_db)):
         expires_delta=access_token_expires,
     )
 
-    # Store token in Redis
+    # Store token in DynamoDB
     expire_seconds = settings.jwt_access_token_expire_minutes * 60
     store_token(user.id, access_token, expire_seconds)
 

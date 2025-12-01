@@ -1,12 +1,12 @@
 """Application configuration using pydantic-settings."""
 
-from pathlib import path
+from pathlib import Path
 from functools import lru_cache
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
-BASE_DIR = path(__file__).resolve().parent
+BASE_DIR = Path(__file__).resolve().parent
 ENV_FILE = BASE_DIR / ".env"
 
 
@@ -22,11 +22,10 @@ class Settings(BaseSettings):
     db_password: str = ""
     db_name: str = "supermarket"
 
-    # Redis settings
-    redis_host: str = "localhost"
-    redis_port: int = 6379
-    redis_db: int = 0
-    redis_password: str = ""
+    # DynamoDB settings
+    dynamodb_table_name: str = "user_tokens"
+    dynamodb_region: str = "ap-northeast-1"
+    dynamodb_endpoint_url: str = ""
 
     # JWT settings
     jwt_secret_key: str = "your-secret-key-change-in-production"
