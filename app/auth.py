@@ -96,7 +96,7 @@ def get_current_user(
     if token_data is None or token_data.user_id is None:
         raise credentials_exception
 
-    # Verify token is stored in Redis (not revoked)
+    # Verify token is stored in DynamoDB (not revoked)
     if not is_token_valid(token_data.user_id, token):
         raise credentials_exception
 

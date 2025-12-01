@@ -72,7 +72,7 @@ def login(login_data: LoginRequest, db: Session = Depends(get_db)):
         expires_delta=access_token_expires,
     )
 
-    # Store token in Redis
+    # Store token in DynamoDB
     expire_seconds = settings.jwt_access_token_expire_minutes * 60
     store_token(user.id, access_token, expire_seconds)
 
