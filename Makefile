@@ -1,0 +1,34 @@
+# Makefile for supermarket_task_server
+
+# Alembic commands
+.PHONY: migrate revision upgrade downgrade history
+
+migrate:
+	pipenv run alembic upgrade head
+
+revision:
+	pipenv run alembic revision --autogenerate -m "$(m)"
+
+upgrade:
+	pipenv run alembic upgrade $(rev)
+
+downgrade:
+	pipenv run alembic downgrade $(rev)
+
+history:
+	pipenv run alembic history
+
+# Linting and formatting commands
+.PHONY: flake8 black isort lint
+
+flake8:
+	pipenv run flake8 app
+
+black:
+	pipenv run black app
+
+isort:
+	pipenv run isort app
+
+# Run all linting and formatting tools
+lint: isort black flake8
