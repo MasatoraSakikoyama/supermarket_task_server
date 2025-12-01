@@ -2,13 +2,17 @@
 
 import io
 from contextlib import redirect_stdout
+from pathlib import Path
 
 from alembic import command
 from alembic.config import Config
 from alembic.script import ScriptDirectory
-from fastapi import APIRouter, HTTPException, status
+from alembic.util.exc import CommandError
+from fastapi import APIRouter, Depends, HTTPException, status
 
+from app.auth import get_current_user
 from app.config import get_settings
+from app.models.user import User
 from app.schemas.alembic import (
     AlembicCurrentResponse,
     AlembicDowngradeRequest,
@@ -21,17 +25,24 @@ from app.schemas.alembic import (
 
 router = APIRouter(prefix="/alembic", tags=["alembic"])
 
+# Get the project root directory (where alembic.ini is located)
+PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+ALEMBIC_INI_PATH = PROJECT_ROOT / "alembic.ini"
+
 
 def get_alembic_config() -> Config:
     """Get Alembic configuration with database URL from settings."""
     settings = get_settings()
-    alembic_cfg = Config("alembic.ini")
+    alembic_cfg = Config(str(ALEMBIC_INI_PATH))
     alembic_cfg.set_main_option("sqlalchemy.url", settings.database_url)
     return alembic_cfg
 
 
 @router.post("/upgrade", response_model=AlembicResponse)
-def upgrade(request: AlembicUpgradeRequest):
+def upgrade(
+    request: AlembicUpgradeRequest,
+    current_user: User = Depends(get_current_user),
+):
     """Run alembic upgrade to the specified revision."""
     try:
         alembic_cfg = get_alembic_config()
@@ -43,7 +54,7 @@ def upgrade(request: AlembicUpgradeRequest):
             message=f"Successfully upgraded to revision: {request.revision}",
             output=output.getvalue() or None,
         )
-    except Exception as e:
+    except CommandError as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Migration upgrade failed: {str(e)}",
@@ -51,7 +62,10 @@ def upgrade(request: AlembicUpgradeRequest):
 
 
 @router.post("/downgrade", response_model=AlembicResponse)
-def downgrade(request: AlembicDowngradeRequest):
+def downgrade(
+    request: AlembicDowngradeRequest,
+    current_user: User = Depends(get_current_user),
+):
     """Run alembic downgrade to the specified revision."""
     try:
         alembic_cfg = get_alembic_config()
@@ -63,7 +77,7 @@ def downgrade(request: AlembicDowngradeRequest):
             message=f"Successfully downgraded to revision: {request.revision}",
             output=output.getvalue() or None,
         )
-    except Exception as e:
+    except CommandError as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Migration downgrade failed: {str(e)}",
@@ -71,7 +85,7 @@ def downgrade(request: AlembicDowngradeRequest):
 
 
 @router.get("/current", response_model=AlembicCurrentResponse)
-def current():
+def current(current_user: User = Depends(get_current_user)):
     """Get current alembic revision."""
     try:
         alembic_cfg = get_alembic_config()
@@ -85,7 +99,7 @@ def current():
             current_revision=current_revision,
             message="Successfully retrieved current revision",
         )
-    except Exception as e:
+    except CommandError as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to get current revision: {str(e)}",
@@ -93,17 +107,20 @@ def current():
 
 
 @router.get("/history", response_model=AlembicHistoryResponse)
-def history():
+def history(current_user: User = Depends(get_current_user)):
     """Get alembic migration history."""
     try:
         alembic_cfg = get_alembic_config()
         script = ScriptDirectory.from_config(alembic_cfg)
         revisions = []
         for rev in script.walk_revisions():
+            # down_revision can be None, a string, or a tuple for branch merges
+            down_rev = rev.down_revision
+            down_revision_str = down_rev if isinstance(down_rev, str) else None
             revisions.append(
                 AlembicHistoryItem(
                     revision=rev.revision,
-                    down_revision=rev.down_revision if isinstance(rev.down_revision, str) else None,
+                    down_revision=down_revision_str,
                     message=rev.doc,
                 )
             )
@@ -112,7 +129,7 @@ def history():
             revisions=revisions,
             message="Successfully retrieved migration history",
         )
-    except Exception as e:
+    except CommandError as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to get migration history: {str(e)}",
@@ -120,7 +137,10 @@ def history():
 
 
 @router.post("/revision", response_model=AlembicResponse)
-def revision(request: AlembicRevisionRequest):
+def revision(
+    request: AlembicRevisionRequest,
+    current_user: User = Depends(get_current_user),
+):
     """Create a new alembic revision."""
     try:
         alembic_cfg = get_alembic_config()
@@ -136,7 +156,7 @@ def revision(request: AlembicRevisionRequest):
             message=f"Successfully created new revision: {request.message}",
             output=output.getvalue() or None,
         )
-    except Exception as e:
+    except CommandError as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to create revision: {str(e)}",
