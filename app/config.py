@@ -22,10 +22,6 @@ class Settings(BaseSettings):
     db_password: str = ""
     db_name: str = "supermarket"
 
-    # Application settings
-    app_name: str = "Develop Server"
-    debug: bool = False
-
     # Redis settings
     redis_host: str = "localhost"
     redis_port: int = 6379

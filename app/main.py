@@ -9,7 +9,7 @@ from app.routers import auth_router, shop_settlements_router, shops_router
 settings = get_settings()
 
 app = FastAPI(
-    title=settings.app_name,
+    title="Supermarket Task Server",
     description="Supermarket Task Server API",
     version="1.0.0",
 )
