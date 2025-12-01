@@ -2,7 +2,7 @@
 
 from fastapi import APIRouter
 
-from app.schemas.health import HealthResponse
+from app.schemas import HealthResponse
 
 router = APIRouter(tags=["health"])
 

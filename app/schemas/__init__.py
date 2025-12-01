@@ -9,12 +9,15 @@ from app.schemas.auth import (
     TokenResponse,
 )
 from app.schemas.health import HealthResponse
-from app.schemas.shop import ShopBase, ShopCreate, ShopResponse, ShopUpdate
-from app.schemas.shop_settlement import (
-    ShopSettlementBase,
-    ShopSettlementCreate,
-    ShopSettlementResponse,
-    ShopSettlementUpdate,
+from app.schemas.shop import (
+    ShopBase,
+    ShopCreate,
+    ShopResponse,
+    ShopUpdate,
+    ShopAccountSettlementBase,
+    ShopAccountSettlementCreate,
+    ShopAccountSettlementResponse,
+    ShopAccountSettlementUpdate,
 )
 
 __all__ = [
@@ -22,10 +25,10 @@ __all__ = [
     "ShopCreate",
     "ShopUpdate",
     "ShopResponse",
-    "ShopSettlementBase",
-    "ShopSettlementCreate",
-    "ShopSettlementUpdate",
-    "ShopSettlementResponse",
+    "ShopAccountSettlementBase",
+    "ShopAccountSettlementCreate",
+    "ShopAccountSettlementUpdate",
+    "ShopAccountSettlementResponse",
     "HealthResponse",
     "LoginRequest",
     "TokenData",

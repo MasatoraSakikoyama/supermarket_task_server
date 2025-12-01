@@ -7,9 +7,8 @@ from sqlalchemy.orm import Session
 
 from app.auth import get_current_user
 from app.database import get_db
-from app.models.user import User
-from app.models.shop import Shop
-from app.schemas.shop import ShopCreate, ShopResponse, ShopUpdate
+from app.models import Shop, User
+from app.schemas import ShopCreate, ShopResponse, ShopUpdate
 
 router = APIRouter(prefix="/shops", tags=["shops"])
 

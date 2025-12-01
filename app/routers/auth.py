@@ -13,9 +13,9 @@ from app.auth import (
 )
 from app.config import get_settings
 from app.database import get_db
-from app.models.user import User
+from app.models import User
 from app.dynamodb_client import delete_token, store_token
-from app.schemas.auth import UserCreate, UserResponse, LoginRequest, TokenResponse
+from app.schemas import UserCreate, UserResponse, LoginRequest, TokenResponse
 
 settings = get_settings()
 

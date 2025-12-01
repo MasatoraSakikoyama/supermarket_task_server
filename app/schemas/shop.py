@@ -34,3 +34,34 @@ class ShopResponse(ShopBase):
     id: int
     created_at: datetime
     updated_at: datetime
+
+
+class ShopAccountSettlementBase(BaseModel):
+    """Base schema for ShopAccountSettlement."""
+
+    name: str
+    description: Optional[str] = None
+
+
+class ShopAccountSettlementCreate(ShopAccountSettlementBase):
+    """Schema for creating a ShopAccountSettlement."""
+
+    pass
+
+
+class ShopAccountSettlementUpdate(BaseModel):
+    """Schema for updating a ShopAccountSettlement."""
+
+    name: Optional[str] = None
+    description: Optional[str] = None
+
+
+class ShopAccountSettlementResponse(ShopAccountSettlementBase):
+    """Schema for ShopAccountSettlement response."""
+
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    shop_id: int
+    created_at: datetime
+    updated_at: datetime

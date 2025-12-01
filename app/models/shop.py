@@ -1,4 +1,4 @@
-from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, func, Decimal
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, func, Enum, DECIMAL
 from sqlalchemy.orm import relationship
 
 from app.const import AccountPeriod
@@ -20,7 +20,7 @@ class Shop(Base):
     )
 
 
-class ShopAccountPeriid(Base):
+class ShopAccountPeriod(Base):
     __tablename__ = "shop_account_periods"
 
     id = Column(Integer, primary_key=True, index=True)
@@ -57,7 +57,7 @@ class ShopAccountSettlement(Base):
     shop_id = Column(Integer, ForeignKey("shops.id"), nullable=False, index=True)
     shop_account_period_id = Column(Integer, ForeignKey("shop_account_periods.id"), nullable=False, index=True) 
     shop_account_title_id = Column(Integer, ForeignKey("shop_account_titles.id"), nullable=False, index=True)
-    amount = Column(Decimal(12, 2), nullable=False)
+    amount = Column(DECIMAL(precision=12, scale=2), nullable=False)
     created_at = Column(DateTime, server_default=func.now(), nullable=False)
     updated_at = Column(
         DateTime, server_default=func.now(), onupdate=func.now(), nullable=False
