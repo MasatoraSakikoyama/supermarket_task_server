@@ -10,7 +10,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import relationship
 
-from app.const import AccountPeriod
+from app.const import AccountPeriod, CountType
 from app.database import Base
 
 
@@ -79,6 +79,10 @@ class ShopAccountPeriod(Base):
         nullable=False,
         index=True,
     )
+    count_type = Column(
+        Enum(CountType),
+        nullable=False,
+    )
     created_at = Column(
         DateTime,
         server_default=func.now(),
@@ -110,7 +114,7 @@ class ShopAccountTitle(Base):
     )
     account_title_id = Column(
         Integer,
-        ForeignKey("account_title.id"),
+        ForeignKey("account_titles.id"),
         nullable=False,
         index=True,
     )

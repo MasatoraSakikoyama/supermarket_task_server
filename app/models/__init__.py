@@ -1,6 +1,7 @@
 """Models package."""
 
 from app.models.account import AccountTitle
+from app.models.region import Area, Prefecture, Region
 from app.models.shop import (
     Shop,
     ShopAccountPeriod,

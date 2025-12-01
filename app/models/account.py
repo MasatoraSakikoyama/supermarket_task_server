@@ -5,7 +5,7 @@ from app.database import Base
 
 
 class AccountTitle(Base):
-    __tablename__ = "account_names"
+    __tablename__ = "account_titles"
 
     id = Column(
         Integer,

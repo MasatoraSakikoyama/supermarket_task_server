@@ -13,7 +13,7 @@ from app.auth import (
 )
 from app.config import get_settings
 from app.database import get_db
-from app.dynamodb_client import delete_token, store_token
+from app.dynamodb import delete_token, store_token
 from app.models import User
 from app.schemas import LoginRequest, TokenResponse, UserCreate, UserResponse
 
@@ -72,13 +72,18 @@ def login(login_data: LoginRequest, db: Session = Depends(get_db)):
     # Create access token
     access_token_expires = timedelta(minutes=settings.jwt_access_token_expire_minutes)
     access_token = create_access_token(
-        data={"sub": user.id, "username": user.username},
+        sub=str(user.id),
+        username=user.username,
         expires_delta=access_token_expires,
     )
 
     # Store token in DynamoDB
     expire_seconds = settings.jwt_access_token_expire_minutes * 60
-    store_token(user.id, access_token, expire_seconds)
+    if not store_token(user.id, access_token, expire_seconds):
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to store token",
+        )
 
     return TokenResponse(access_token=access_token, token_type="bearer")
 

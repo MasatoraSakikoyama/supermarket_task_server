@@ -21,13 +21,13 @@ def get_dynamodb_resource():
         if settings.dynamodb_endpoint_url:
             _dynamodb_resource = boto3.resource(
                 "dynamodb",
-                region_name=settings.dynamodb_region,
+                region_name=settings.aws_region,
                 endpoint_url=settings.dynamodb_endpoint_url,
             )
         else:
             _dynamodb_resource = boto3.resource(
                 "dynamodb",
-                region_name=settings.dynamodb_region,
+                region_name=settings.aws_region,
             )
     return _dynamodb_resource
 
@@ -51,7 +51,8 @@ def store_token(user_id: int, token: str, expire_seconds: int) -> bool:
             }
         )
         return True
-    except ClientError:
+    except ClientError as e:
+        print(f"Error storing token: {e}")
         return False
 
 
@@ -67,7 +68,8 @@ def get_stored_token(user_id: int) -> Optional[str]:
             if ttl > int(time.time()):
                 return item.get("token")
         return None
-    except ClientError:
+    except ClientError as e:
+        print(f"Error retrieving token: {e}")
         return None
 
 
@@ -77,7 +79,8 @@ def delete_token(user_id: int) -> bool:
     try:
         table.delete_item(Key={"user_id": str(user_id)})
         return True
-    except ClientError:
+    except ClientError as e:
+        print(f"Error deleting token: {e}")
         return False
 
 

@@ -11,14 +11,14 @@ from sqlalchemy.orm import Session
 
 from app.config import get_settings
 from app.database import get_db
-from app.dynamodb_client import is_token_valid
-from app.models.user import User
-from app.schemas.auth import TokenData
+from app.dynamodb import is_token_valid
+from app.models import User
+from app.schemas import TokenData
 
 settings = get_settings()
 
 # Password hashing context
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
 
 # HTTP Bearer token security scheme
 security = HTTPBearer()
@@ -31,15 +31,18 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
 
 def get_password_hash(password: str) -> str:
     """Hash a password."""
-    return pwd_context.hash(password)
+
+    password_bytes = password.encode("utf-8")
+    return pwd_context.hash(password_bytes)
 
 
 def create_access_token(
-    data: dict,
+    sub: str,
+    username: str,
     expires_delta: Optional[timedelta] = None,
 ) -> str:
     """Create a JWT access token."""
-    to_encode = data.copy()
+    to_encode = {"sub": sub, "username": username}
     if expires_delta:
         expire = datetime.now(timezone.utc) + expires_delta
     else:
@@ -59,14 +62,16 @@ def decode_access_token(token: str) -> Optional[TokenData]:
         payload = jwt.decode(
             token, settings.jwt_secret_key, algorithms=[settings.jwt_algorithm]
         )
-        user_id: int = payload.get("sub")
+        user_id: int = int(payload.get("sub"))
         username: str = payload.get("username")
         if user_id is None:
             return None
         return TokenData(user_id=user_id, username=username)
-    except jwt.ExpiredSignatureError:
+    except jwt.ExpiredSignatureError as e:
+        print("Token has expired:", e)
         return None
-    except jwt.InvalidTokenError:
+    except jwt.InvalidTokenError as e:
+        print("Invalid token:", e)
         return None
 
 
