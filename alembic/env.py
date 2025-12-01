@@ -7,7 +7,17 @@ from sqlalchemy import engine_from_config, pool
 
 from app.config import get_settings
 from app.database import Base
-from app.models import User, Shop, ShopSettlement  # noqa: F401 - Import models for metadata
+from app.models import (
+    AccountTitle,
+    Region,
+    Area,
+    Prefecture,
+    Shop,
+    ShopAccountPeriod,
+    ShopAccountSettlement,
+    ShopAccountTitle,
+    User,
+)  # noqa: F401 - Import models for metadata
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

@@ -110,7 +110,7 @@ class ShopAccountTitle(Base):
     )
     account_title_id = Column(
         Integer,
-        ForeignKey("account_title.id"),
+        ForeignKey("account_titles.id"),
         nullable=False,
         index=True,
     )

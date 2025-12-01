@@ -3,14 +3,18 @@
 from datetime import datetime
 from typing import Optional
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
+
+from app.const import AccountPeriod
 
 
 class ShopBase(BaseModel):
     """Base schema for Shop."""
 
-    name: str
-    description: Optional[str] = None
+    region_id: int
+    area_id: int
+    prefecture_id: int
+    name: str = Field(..., max_length=255)
 
 
 class ShopCreate(ShopBase):
@@ -22,8 +26,10 @@ class ShopCreate(ShopBase):
 class ShopUpdate(BaseModel):
     """Schema for updating a Shop."""
 
+    region_id: Optional[int] = None
+    area_id: Optional[int] = None
+    prefecture_id: Optional[int] = None
     name: Optional[str] = None
-    description: Optional[str] = None
 
 
 class ShopResponse(ShopBase):
@@ -36,11 +42,67 @@ class ShopResponse(ShopBase):
     updated_at: datetime
 
 
+class ShopAccountPeriodBase(BaseModel):
+    year: int = Field(..., ge=2000, le=2100)
+    period: AccountPeriod
+
+
+class ShopAccountPeriodCreate(ShopAccountPeriodBase):
+    """Schema for creating a ShopAccountPeriod."""
+
+    pass
+
+
+class ShopAccountPeriodUpdate(BaseModel):
+    """Schema for updating a ShopAccountPeriod."""
+
+    year: Optional[int] = Field(None, ge=2000, le=2100)
+    period: Optional[AccountPeriod] = None
+
+
+class ShopAccountPeriodResponse(ShopAccountPeriodBase):
+    """Schema for ShopAccountPeriod response."""
+
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    shop_id: int
+    year: int
+    period: AccountPeriod
+    created_at: datetime
+    updated_at: datetime
+
+
+class ShopAccountTitleBase(BaseModel):
+    """Base schema for ShopAccountTitle."""
+
+    shop_id: int
+    account_title_id: int
+
+
+class ShopAccountTitleCreate(ShopAccountTitleBase):
+    """Schema for creating a ShopAccountTitle."""
+
+    pass
+
+
+class ShopAccountTitleResponse(ShopAccountTitleBase):
+    """Schema for ShopAccountTitle response."""
+
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    created_at: datetime
+    updated_at: datetime
+
+
 class ShopAccountSettlementBase(BaseModel):
     """Base schema for ShopAccountSettlement."""
 
-    name: str
-    description: Optional[str] = None
+    shop_id: int
+    shop_account_period_id: int
+    shop_account_title_id: int
+    amount: float
 
 
 class ShopAccountSettlementCreate(ShopAccountSettlementBase):
@@ -52,8 +114,7 @@ class ShopAccountSettlementCreate(ShopAccountSettlementBase):
 class ShopAccountSettlementUpdate(BaseModel):
     """Schema for updating a ShopAccountSettlement."""
 
-    name: Optional[str] = None
-    description: Optional[str] = None
+    amount: Optional[float] = None
 
 
 class ShopAccountSettlementResponse(ShopAccountSettlementBase):
@@ -63,5 +124,8 @@ class ShopAccountSettlementResponse(ShopAccountSettlementBase):
 
     id: int
     shop_id: int
+    shop_account_period_id: int
+    shop_account_title_id: int
+    amount: float
     created_at: datetime
     updated_at: datetime

@@ -21,13 +21,13 @@ def get_dynamodb_resource():
         if settings.dynamodb_endpoint_url:
             _dynamodb_resource = boto3.resource(
                 "dynamodb",
-                region_name=settings.dynamodb_region,
+                region_name=settings.aws_region,
                 endpoint_url=settings.dynamodb_endpoint_url,
             )
         else:
             _dynamodb_resource = boto3.resource(
                 "dynamodb",
-                region_name=settings.dynamodb_region,
+                region_name=settings.aws_region,
             )
     return _dynamodb_resource
 

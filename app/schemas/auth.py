@@ -3,20 +3,20 @@
 from datetime import datetime
 from typing import Optional
 
-from pydantic import BaseModel, ConfigDict, EmailStr
+from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
 
 class UserBase(BaseModel):
     """Base schema for User."""
 
-    username: str
-    email: EmailStr
+    username: str = Field(..., min_length=3, max_length=255)
+    email: EmailStr = Field(..., max_length=255)
 
 
 class UserCreate(UserBase):
     """Schema for creating an User."""
 
-    password: str
+    password: str = Field(..., min_length=3, max_length=72)
 
 
 class UserResponse(UserBase):
@@ -32,8 +32,8 @@ class UserResponse(UserBase):
 class LoginRequest(BaseModel):
     """Schema for login request."""
 
-    email: EmailStr
-    password: str
+    email: EmailStr = Field(..., max_length=255)
+    password: str = Field(..., min_length=4, max_length=72)
 
 
 class TokenResponse(BaseModel):
