@@ -1,14 +1,19 @@
 """Application configuration using pydantic-settings."""
 
+from pathlib import path
 from functools import lru_cache
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
+BASE_DIR = path(__file__).resolve().parent
+ENV_FILE = BASE_DIR / ".env"
+
+
 class Settings(BaseSettings):
     """Application settings loaded from environment variables."""
 
-    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
+    model_config = SettingsConfigDict(env_file=ENV_FILE, env_file_encoding="utf-8")
 
     # Database settings for AWS Aurora MySQL
     db_host: str = "localhost"
@@ -18,7 +23,7 @@ class Settings(BaseSettings):
     db_name: str = "supermarket"
 
     # Application settings
-    app_name: str = "Supermarket Task Server"
+    app_name: str = "Develop Server"
     debug: bool = False
 
     # Redis settings

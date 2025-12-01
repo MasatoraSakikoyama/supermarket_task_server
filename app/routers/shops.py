@@ -5,9 +5,9 @@ from typing import List
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
-from app.auth import get_current_account
+from app.auth import get_current_user
 from app.database import get_db
-from app.models.account import Account
+from app.models.user import User
 from app.models.shop import Shop
 from app.schemas.shop import ShopCreate, ShopResponse, ShopUpdate
 
@@ -19,7 +19,7 @@ def get_shops(
     skip: int = 0,
     limit: int = 100,
     db: Session = Depends(get_db),
-    current_account: Account = Depends(get_current_account),
+    current_user: User = Depends(get_current_user),
 ):
     """Get all shops with pagination."""
     shops = db.query(Shop).offset(skip).limit(limit).all()
@@ -30,7 +30,7 @@ def get_shops(
 def get_shop(
     shop_id: int,
     db: Session = Depends(get_db),
-    current_account: Account = Depends(get_current_account),
+    current_user: User = Depends(get_current_user),
 ):
     """Get a single shop by ID."""
     shop = db.query(Shop).filter(Shop.id == shop_id).first()
@@ -45,7 +45,7 @@ def get_shop(
 def create_shop(
     shop_data: ShopCreate,
     db: Session = Depends(get_db),
-    current_account: Account = Depends(get_current_account),
+    current_user: User = Depends(get_current_user),
 ):
     """Create a new shop."""
     shop = Shop(**shop_data.model_dump())
@@ -60,7 +60,7 @@ def update_shop(
     shop_id: int,
     shop_data: ShopUpdate,
     db: Session = Depends(get_db),
-    current_account: Account = Depends(get_current_account),
+    current_user: User = Depends(get_current_user),
 ):
     """Update an existing shop."""
     shop = db.query(Shop).filter(Shop.id == shop_id).first()
@@ -82,7 +82,7 @@ def update_shop(
 def delete_shop(
     shop_id: int,
     db: Session = Depends(get_db),
-    current_account: Account = Depends(get_current_account),
+    current_user: User = Depends(get_current_user),
 ):
     """Delete a shop."""
     shop = db.query(Shop).filter(Shop.id == shop_id).first()

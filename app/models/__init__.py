@@ -1,7 +1,7 @@
 """Models package."""
 
-from app.models.account import Account
-from app.models.shop import Shop
-from app.models.shop_settlement import ShopSettlement
+from app.models.account import AccountName
+from app.models.user import User
+from app.models.shop import Shop, ShopSettlement
 
-__all__ = ["Shop", "ShopSettlement", "Account"]
+__all__ = ["AccountName", "Shop", "ShopSettlement", "User"]

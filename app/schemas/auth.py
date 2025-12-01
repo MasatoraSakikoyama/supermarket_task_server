@@ -6,21 +6,21 @@ from typing import Optional
 from pydantic import BaseModel, ConfigDict, EmailStr
 
 
-class AccountBase(BaseModel):
-    """Base schema for Account."""
+class UserBase(BaseModel):
+    """Base schema for User."""
 
     username: str
     email: EmailStr
 
 
-class AccountCreate(AccountBase):
-    """Schema for creating an Account."""
+class UserCreate(UserBase):
+    """Schema for creating an User."""
 
     password: str
 
 
-class AccountResponse(AccountBase):
-    """Schema for Account response."""
+class UserResponse(UserBase):
+    """Schema for User response."""
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -46,5 +46,5 @@ class TokenResponse(BaseModel):
 class TokenData(BaseModel):
     """Schema for decoded token data."""
 
-    account_id: Optional[int] = None
+    user_id: Optional[int] = None
     username: Optional[str] = None

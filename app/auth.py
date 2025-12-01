@@ -11,7 +11,7 @@ from sqlalchemy.orm import Session
 
 from app.config import get_settings
 from app.database import get_db
-from app.models.account import Account
+from app.models.user import User
 from app.redis_client import is_token_valid
 from app.schemas.auth import TokenData
 
@@ -56,34 +56,34 @@ def decode_access_token(token: str) -> Optional[TokenData]:
         payload = jwt.decode(
             token, settings.jwt_secret_key, algorithms=[settings.jwt_algorithm]
         )
-        account_id: int = payload.get("sub")
+        user_id: int = payload.get("sub")
         username: str = payload.get("username")
-        if account_id is None:
+        if user_id is None:
             return None
-        return TokenData(account_id=account_id, username=username)
+        return TokenData(user_id=user_id, username=username)
     except jwt.ExpiredSignatureError:
         return None
     except jwt.InvalidTokenError:
         return None
 
 
-def authenticate_account(db: Session, username: str, password: str) -> Optional[Account]:
-    """Authenticate an account by username and password."""
-    account = db.query(Account).filter(Account.username == username).first()
-    if not account:
+def authenticate_user(db: Session, username: str, password: str) -> Optional[User]:
+    """Authenticate an user by username and password."""
+    user = db.query(User).filter(User.username == username).first()
+    if not user:
         # Use dummy hash to prevent timing attacks
         pwd_context.verify("dummy_password", get_password_hash("dummy_hash"))
         return None
-    if not verify_password(password, account.hashed_password):
+    if not verify_password(password, user.hashed_password):
         return None
-    return account
+    return user
 
 
-def get_current_account(
+def get_current_user(
     credentials: HTTPAuthorizationCredentials = Depends(security),
     db: Session = Depends(get_db),
-) -> Account:
-    """Get current authenticated account from JWT token."""
+) -> User:
+    """Get current authenticated user from JWT token."""
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -93,15 +93,15 @@ def get_current_account(
     token = credentials.credentials
     token_data = decode_access_token(token)
 
-    if token_data is None or token_data.account_id is None:
+    if token_data is None or token_data.user_id is None:
         raise credentials_exception
 
     # Verify token is stored in Redis (not revoked)
-    if not is_token_valid(token_data.account_id, token):
+    if not is_token_valid(token_data.user_id, token):
         raise credentials_exception
 
-    account = db.query(Account).filter(Account.id == token_data.account_id).first()
-    if account is None:
+    user = db.query(User).filter(User.id == token_data.user_id).first()
+    if user is None:
         raise credentials_exception
 
-    return account
+    return user

@@ -1,9 +1,9 @@
 """Schemas package."""
 
 from app.schemas.auth import (
-    AccountBase,
-    AccountCreate,
-    AccountResponse,
+    UserBase,
+    UserCreate,
+    UserResponse,
     LoginRequest,
     TokenData,
     TokenResponse,
@@ -28,7 +28,7 @@ __all__ = [
     "LoginRequest",
     "TokenData",
     "TokenResponse",
-    "AccountBase",
-    "AccountCreate",
-    "AccountResponse",
+    "UserBase",
+    "UserCreate",
+    "UserResponse",
 ]
