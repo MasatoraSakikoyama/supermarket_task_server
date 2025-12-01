@@ -8,6 +8,7 @@ from app.schemas.auth import (
     TokenData,
     TokenResponse,
 )
+from app.schemas.health import HealthResponse
 from app.schemas.shop import ShopBase, ShopCreate, ShopResponse, ShopUpdate
 from app.schemas.shop_settlement import (
     ShopSettlementBase,
@@ -25,6 +26,7 @@ __all__ = [
     "ShopSettlementCreate",
     "ShopSettlementUpdate",
     "ShopSettlementResponse",
+    "HealthResponse",
     "LoginRequest",
     "TokenData",
     "TokenResponse",
