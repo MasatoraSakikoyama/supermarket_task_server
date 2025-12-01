@@ -75,7 +75,7 @@ def authenticate_user(
     email: str,
     password: str,
 ) -> Optional[User]:
-    """Authenticate an user by email and password."""
+    """Authenticate a user by email and password."""
     user = db.query(User).filter(User.email == email).first()
     if not user:
         # Use dummy hash to prevent timing attacks
