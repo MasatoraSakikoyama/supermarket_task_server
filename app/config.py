@@ -5,15 +5,16 @@ from functools import lru_cache
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-
 base_dir = os.path.dirname(os.path.abspath(__file__))
-env_path = os.path.join(base_dir, '.env')
+env_path = os.path.join(base_dir, ".env")
 
 
 class Settings(BaseSettings):
     """Application settings loaded from environment variables."""
 
-    model_config = SettingsConfigDict(env_file=env_path, env_file_encoding="utf-8", extra="ignore")
+    model_config = SettingsConfigDict(
+        env_file=env_path, env_file_encoding="utf-8", extra="ignore"
+    )
 
     # Database settings for AWS Aurora MySQL
     db_host: str = ""

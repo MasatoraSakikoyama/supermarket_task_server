@@ -11,8 +11,8 @@ from sqlalchemy.orm import Session
 
 from app.config import get_settings
 from app.database import get_db
-from app.models.user import User
 from app.dynamodb_client import is_token_valid
+from app.models.user import User
 from app.schemas.auth import TokenData
 
 settings = get_settings()
@@ -34,7 +34,10 @@ def get_password_hash(password: str) -> str:
     return pwd_context.hash(password)
 
 
-def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
+def create_access_token(
+    data: dict,
+    expires_delta: Optional[timedelta] = None,
+) -> str:
     """Create a JWT access token."""
     to_encode = data.copy()
     if expires_delta:
@@ -67,7 +70,11 @@ def decode_access_token(token: str) -> Optional[TokenData]:
         return None
 
 
-def authenticate_user(db: Session, username: str, password: str) -> Optional[User]:
+def authenticate_user(
+    db: Session,
+    username: str,
+    password: str,
+) -> Optional[User]:
     """Authenticate an user by username and password."""
     user = db.query(User).filter(User.username == username).first()
     if not user:

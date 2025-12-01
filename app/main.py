@@ -4,7 +4,12 @@ from fastapi import FastAPI
 from mangum import Mangum
 
 from app.config import get_settings
-from app.routers import auth_router, health_router, shop_settlements_router, shops_router
+from app.routers import (
+    auth_router,
+    health_router,
+    shop_settlements_router,
+    shops_router,
+)
 
 settings = get_settings()
 

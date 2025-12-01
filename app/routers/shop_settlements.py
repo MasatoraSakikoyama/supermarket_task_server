@@ -14,7 +14,10 @@ from app.schemas import (
     ShopAccountSettlementUpdate,
 )
 
-router = APIRouter(prefix="/shops/{shop_id}/settlements", tags=["shop_settlements"])
+router = APIRouter(
+    prefix="/shops/{shop_id}/settlements",
+    tags=["shop_settlements"],
+)
 
 
 @router.get("/", response_model=List[ShopAccountSettlementResponse])
@@ -56,17 +59,25 @@ def get_shop_settlement(
         )
     settlement = (
         db.query(ShopAccountSettlement)
-        .filter(ShopAccountSettlement.id == settlement_id, ShopAccountSettlement.shop_id == shop_id)
+        .filter(
+            ShopAccountSettlement.id == settlement_id,
+            ShopAccountSettlement.shop_id == shop_id,
+        )
         .first()
     )
     if settlement is None:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="ShopAccountSettlement not found"
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="ShopAccountSettlement not found",
         )
     return settlement
 
 
-@router.post("/", response_model=ShopAccountSettlementResponse, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "/",
+    response_model=ShopAccountSettlementResponse,
+    status_code=status.HTTP_201_CREATED,
+)
 def create_shop_settlement(
     shop_id: int,
     settlement_data: ShopAccountSettlementCreate,
@@ -79,7 +90,10 @@ def create_shop_settlement(
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Shop not found"
         )
-    settlement = ShopAccountSettlement(shop_id=shop_id, **settlement_data.model_dump())
+    settlement = ShopAccountSettlement(
+        shop_id=shop_id,
+        **settlement_data.model_dump(),
+    )
     db.add(settlement)
     db.commit()
     db.refresh(settlement)
@@ -102,12 +116,16 @@ def update_shop_settlement(
         )
     settlement = (
         db.query(ShopAccountSettlement)
-        .filter(ShopAccountSettlement.id == settlement_id, ShopAccountSettlement.shop_id == shop_id)
+        .filter(
+            ShopAccountSettlement.id == settlement_id,
+            ShopAccountSettlement.shop_id == shop_id,
+        )
         .first()
     )
     if settlement is None:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="ShopAccountSettlement not found"
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="ShopAccountSettlement not found",
         )
 
     update_data = settlement_data.model_dump(exclude_unset=True)
@@ -134,12 +152,16 @@ def delete_shop_settlement(
         )
     settlement = (
         db.query(ShopAccountSettlement)
-        .filter(ShopAccountSettlement.id == settlement_id, ShopAccountSettlement.shop_id == shop_id)
+        .filter(
+            ShopAccountSettlement.id == settlement_id,
+            ShopAccountSettlement.shop_id == shop_id,
+        )
         .first()
     )
     if settlement is None:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="ShopAccountSettlement not found"
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="ShopAccountSettlement not found",
         )
     db.delete(settlement)
     db.commit()

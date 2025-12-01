@@ -13,16 +13,20 @@ from app.auth import (
 )
 from app.config import get_settings
 from app.database import get_db
-from app.models import User
 from app.dynamodb_client import delete_token, store_token
-from app.schemas import UserCreate, UserResponse, LoginRequest, TokenResponse
+from app.models import User
+from app.schemas import LoginRequest, TokenResponse, UserCreate, UserResponse
 
 settings = get_settings()
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 
-@router.post("/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "/register",
+    response_model=UserResponse,
+    status_code=status.HTTP_201_CREATED,
+)
 def register(user_data: UserCreate, db: Session = Depends(get_db)):
     """Register a new user."""
     # Check if username already exists
