@@ -8,14 +8,14 @@ from pydantic_settings import BaseSettings
 class Settings(BaseSettings):
     """Application settings loaded from environment variables."""
 
-    aws_region: str = ""
-
     # Database settings for AWS Aurora MySQL
     database_url: str = ""
 
-    # DynamoDB settings
-    dynamodb_endpoint_url: str = ""
-    dynamodb_table_name: str = ""
+    # Redis settings
+    redis_host: str = "localhost"
+    redis_port: int = 6379
+    redis_db: int = 0
+    redis_password: str = ""
 
     # JWT settings
     jwt_secret_key: str = ""

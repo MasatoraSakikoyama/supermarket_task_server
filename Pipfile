@@ -13,9 +13,9 @@ pymysql = "*"
 alembic = "*"
 cryptography = "*"
 pyjwt = "*"
-boto3 = "*"
 passlib = {extras = ["argon2"], version = "*"}
 email-validator = "*"
+redis = "*"
 
 [dev-packages]
 pytest = "*"

@@ -11,7 +11,7 @@ from sqlalchemy.orm import Session
 
 from app.config import get_settings
 from app.database import get_db
-from app.dynamodb_client import is_token_valid
+from app.redis_client import is_token_valid
 from app.models import User
 from app.schemas import TokenData
 
@@ -106,7 +106,7 @@ def get_current_user(
     if token_data is None or token_data.user_id is None:
         raise credentials_exception
 
-    # Verify token is stored in DynamoDB (not revoked)
+    # Verify token is stored in Redis (not revoked)
     if not is_token_valid(token_data.user_id, token):
         raise credentials_exception
 
