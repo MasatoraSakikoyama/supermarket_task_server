@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from mangum import Mangum
 
 from app.config import get_settings
-from app.routers import auth_router, shop_settlements_router, shops_router
+from app.routers import alembic_router, auth_router, shop_settlements_router, shops_router
 
 settings = get_settings()
 
@@ -18,6 +18,7 @@ app = FastAPI(
 app.include_router(auth_router)
 app.include_router(shops_router)
 app.include_router(shop_settlements_router)
+app.include_router(alembic_router)
 
 
 # AWS Lambda handler using Mangum
