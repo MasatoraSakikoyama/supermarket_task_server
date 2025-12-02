@@ -23,8 +23,8 @@ router = APIRouter(
 @router.get("/", response_model=List[ShopAccountSettlementResponse])
 def get_shop_settlements(
     shop_id: int,
-    skip: int = 0,
     limit: int = 100,
+    offset: int = 0,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
@@ -37,7 +37,7 @@ def get_shop_settlements(
     settlements = (
         db.query(ShopAccountSettlement)
         .filter(ShopAccountSettlement.shop_id == shop_id)
-        .offset(skip)
+        .offset(offset)
         .limit(limit)
         .all()
     )

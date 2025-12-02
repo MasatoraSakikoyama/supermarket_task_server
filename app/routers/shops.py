@@ -15,13 +15,13 @@ router = APIRouter(prefix="/shops", tags=["shops"])
 
 @router.get("/", response_model=List[ShopResponse])
 def get_shops(
-    skip: int = 0,
     limit: int = 100,
+    offset: int = 0,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
     """Get all shops with pagination."""
-    shops = db.query(Shop).offset(skip).limit(limit).all()
+    shops = db.query(Shop).offset(offset).limit(limit).all()
     return shops
 
 
