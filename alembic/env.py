@@ -18,6 +18,7 @@ from app.models import (
     ShopAccountTitle,
     User,
 )  # noqa: F401 - Import models for metadata
+from app.models.types import IntEnumType
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -35,6 +36,25 @@ target_metadata = Base.metadata
 # Get database URL from settings
 settings = get_settings()
 config.set_main_option("sqlalchemy.url", settings.database_url)
+
+
+def render_item(type_, obj, autogen_context):
+    """Custom type rendering for Alembic autogenerate.
+
+    Renders IntEnumType as sa.Integer() in migration files.
+
+    Args:
+        type_: The type of item being rendered (e.g., "type", "column").
+        obj: The SQLAlchemy object to render.
+        autogen_context: The autogenerate context provided by Alembic.
+
+    Returns:
+        A string representation if IntEnumType is detected,
+        otherwise False to use Alembic's default rendering.
+    """
+    if type_ == "type" and isinstance(obj, IntEnumType):
+        return "sa.Integer()"
+    return False
 
 
 def run_migrations_offline() -> None:
@@ -55,6 +75,7 @@ def run_migrations_offline() -> None:
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
+        render_item=render_item,
     )
 
     with context.begin_transaction():
@@ -75,7 +96,11 @@ def run_migrations_online() -> None:
     )
 
     with connectable.connect() as connection:
-        context.configure(connection=connection, target_metadata=target_metadata)
+        context.configure(
+            connection=connection,
+            target_metadata=target_metadata,
+            render_item=render_item,
+        )
 
         with context.begin_transaction():
             context.run_migrations()
