@@ -10,10 +10,10 @@ from app.database import get_db
 from app.models import Shop, User
 from app.schemas import ShopCreate, ShopResponse, ShopUpdate
 
-router = APIRouter(prefix="/shops", tags=["shops"])
+router = APIRouter(prefix="/shop", tags=["shop"])
 
 
-@router.get("/", response_model=List[ShopResponse])
+@router.get("", response_model=List[ShopResponse])
 def get_shops(
     limit: int = 100,
     offset: int = 0,
@@ -21,6 +21,10 @@ def get_shops(
     current_user: User = Depends(get_current_user),
 ):
     """Get all shops with pagination."""
+    print("#" * 20)
+    print(f"Current User: {current_user.username}")
+    print(offset)
+    print(limit)
     shops = db.query(Shop).offset(offset).limit(limit).all()
     return shops
 

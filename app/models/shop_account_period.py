@@ -1,38 +1,42 @@
-from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, func
+from sqlalchemy import Column, DateTime, Enum, ForeignKey, Integer, func
+from sqlalchemy.orm import relationship
 
+from app.const import AccountPeriod, CountType
 from app.database import Base
 
 
-class Shop(Base):
-    __tablename__ = "shops"
+class ShopAccountPeriod(Base):
+    __tablename__ = "shop_account_periods"
 
     id = Column(
         Integer,
         primary_key=True,
         index=True,
     )
-    region = Column(
+    shop_id = Column(
         Integer,
-        ForeignKey("regions.id"),
+        ForeignKey("shops.id"),
         nullable=False,
         index=True,
     )
-    area = Column(
+    year = Column(
         Integer,
-        ForeignKey("areas.id"),
         nullable=False,
         index=True,
     )
-    prefecture = Column(
+    month = Column(
         Integer,
-        ForeignKey("prefectures.id"),
         nullable=False,
         index=True,
     )
-    name = Column(
-        String(255),
+    period = Column(
+        Enum(AccountPeriod),
         nullable=False,
         index=True,
+    )
+    count_type = Column(
+        Enum(CountType),
+        nullable=False,
     )
     created_at = Column(
         DateTime,
@@ -45,3 +49,5 @@ class Shop(Base):
         onupdate=func.now(),
         nullable=False,
     )
+
+    shop = relationship("Shop", backref="shop_account_periods")

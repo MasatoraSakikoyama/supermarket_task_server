@@ -1,4 +1,4 @@
-"""ShopAccountSettlement router for CRUD operations."""
+"""ShopAccountData router for CRUD operations."""
 
 from typing import List
 
@@ -7,162 +7,162 @@ from sqlalchemy.orm import Session
 
 from app.auth import get_current_user
 from app.database import get_db
-from app.models import Shop, ShopAccountSettlement, User
+from app.models import Shop, ShopAccountData, User
 from app.schemas import (
-    ShopAccountSettlementCreate,
-    ShopAccountSettlementResponse,
-    ShopAccountSettlementUpdate,
+    ShopAccountDataCreate,
+    ShopAccountDataResponse,
+    ShopAccountDataUpdate,
 )
 
 router = APIRouter(
-    prefix="/shops/{shop_id}/settlements",
-    tags=["shop_settlements"],
+    prefix="/shop/{shop_id}/account_data",
+    tags=["shop_account_data"],
 )
 
 
-@router.get("/", response_model=List[ShopAccountSettlementResponse])
-def get_shop_settlements(
+@router.get("", response_model=List[ShopAccountDataResponse])
+def get_shop_account_data_list(
     shop_id: int,
     limit: int = 100,
     offset: int = 0,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    """Get all settlements for a shop with pagination."""
+    """Get all data for a shop with pagination."""
     shop = db.query(Shop).filter(Shop.id == shop_id).first()
     if shop is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Shop not found"
         )
-    settlements = (
-        db.query(ShopAccountSettlement)
-        .filter(ShopAccountSettlement.shop_id == shop_id)
+    data = (
+        db.query(ShopAccountData)
+        .filter(ShopAccountData.shop_id == shop_id)
         .offset(offset)
         .limit(limit)
         .all()
     )
-    return settlements
+    return data
 
 
-@router.get("/{settlement_id}", response_model=ShopAccountSettlementResponse)
-def get_shop_settlement(
+@router.get("/{data_id}", response_model=ShopAccountDataResponse)
+def get_shop_account_data(
     shop_id: int,
-    settlement_id: int,
+    data_id: int,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    """Get a single settlement by ID for a shop."""
+    """Get a single data by ID for a shop."""
     shop = db.query(Shop).filter(Shop.id == shop_id).first()
     if shop is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Shop not found"
         )
-    settlement = (
-        db.query(ShopAccountSettlement)
+    data = (
+        db.query(ShopAccountData)
         .filter(
-            ShopAccountSettlement.id == settlement_id,
-            ShopAccountSettlement.shop_id == shop_id,
+            ShopAccountData.id == data_id,
+            ShopAccountData.shop_id == shop_id,
         )
         .first()
     )
-    if settlement is None:
+    if data is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="ShopAccountSettlement not found",
+            detail="ShopAccountData not found",
         )
-    return settlement
+    return data
 
 
 @router.post(
-    "/",
-    response_model=ShopAccountSettlementResponse,
+    "",
+    response_model=ShopAccountDataResponse,
     status_code=status.HTTP_201_CREATED,
 )
-def create_shop_settlement(
+def create_shop_account_data(
     shop_id: int,
-    settlement_data: ShopAccountSettlementCreate,
+    data_data: ShopAccountDataCreate,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    """Create a new settlement for a shop."""
+    """Create a new data for a shop."""
     shop = db.query(Shop).filter(Shop.id == shop_id).first()
     if shop is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Shop not found"
         )
-    settlement = ShopAccountSettlement(
+    data = ShopAccountData(
         shop_id=shop_id,
-        **settlement_data.model_dump(),
+        **data_data.model_dump(),
     )
-    db.add(settlement)
+    db.add(data)
     db.commit()
-    db.refresh(settlement)
-    return settlement
+    db.refresh(data)
+    return data
 
 
-@router.put("/{settlement_id}", response_model=ShopAccountSettlementResponse)
-def update_shop_settlement(
+@router.put("/{data_id}", response_model=ShopAccountDataResponse)
+def update_shop_account_data(
     shop_id: int,
-    settlement_id: int,
-    settlement_data: ShopAccountSettlementUpdate,
+    data_id: int,
+    data_data: ShopAccountDataUpdate,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    """Update an existing settlement for a shop."""
+    """Update an existing data for a shop."""
     shop = db.query(Shop).filter(Shop.id == shop_id).first()
     if shop is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Shop not found"
         )
-    settlement = (
-        db.query(ShopAccountSettlement)
+    data = (
+        db.query(ShopAccountData)
         .filter(
-            ShopAccountSettlement.id == settlement_id,
-            ShopAccountSettlement.shop_id == shop_id,
+            ShopAccountData.id == data_id,
+            ShopAccountData.shop_id == shop_id,
         )
         .first()
     )
-    if settlement is None:
+    if data is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="ShopAccountSettlement not found",
+            detail="ShopAccountData not found",
         )
 
-    update_data = settlement_data.model_dump(exclude_unset=True)
+    update_data = data_data.model_dump(exclude_unset=True)
     for field, value in update_data.items():
-        setattr(settlement, field, value)
+        setattr(data, field, value)
 
     db.commit()
-    db.refresh(settlement)
-    return settlement
+    db.refresh(data)
+    return data
 
 
-@router.delete("/{settlement_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_shop_settlement(
+@router.delete("/{data_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_shop_account_data(
     shop_id: int,
-    settlement_id: int,
+    data_id: int,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    """Delete a settlement for a shop."""
+    """Delete a data for a shop."""
     shop = db.query(Shop).filter(Shop.id == shop_id).first()
     if shop is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Shop not found"
         )
-    settlement = (
-        db.query(ShopAccountSettlement)
+    data = (
+        db.query(ShopAccountData)
         .filter(
-            ShopAccountSettlement.id == settlement_id,
-            ShopAccountSettlement.shop_id == shop_id,
+            ShopAccountData.id == data_id,
+            ShopAccountData.shop_id == shop_id,
         )
         .first()
     )
-    if settlement is None:
+    if data is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="ShopAccountSettlement not found",
+            detail="ShopAccountData not found",
         )
-    db.delete(settlement)
+    db.delete(data)
     db.commit()
     return None

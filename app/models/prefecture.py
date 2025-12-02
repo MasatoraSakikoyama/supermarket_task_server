@@ -1,37 +1,32 @@
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, func
+from sqlalchemy.orm import relationship
 
 from app.database import Base
 
 
-class Shop(Base):
-    __tablename__ = "shops"
+class Prefecture(Base):
+    __tablename__ = "prefectures"
 
     id = Column(
         Integer,
         primary_key=True,
         index=True,
     )
-    region = Column(
-        Integer,
-        ForeignKey("regions.id"),
-        nullable=False,
-        index=True,
-    )
-    area = Column(
+    area_id = Column(
         Integer,
         ForeignKey("areas.id"),
-        nullable=False,
-        index=True,
-    )
-    prefecture = Column(
-        Integer,
-        ForeignKey("prefectures.id"),
         nullable=False,
         index=True,
     )
     name = Column(
         String(255),
         nullable=False,
+        index=True,
+    )
+    code = Column(
+        String(50),
+        nullable=False,
+        unique=True,
         index=True,
     )
     created_at = Column(
@@ -45,3 +40,5 @@ class Shop(Base):
         onupdate=func.now(),
         nullable=False,
     )
+
+    area = relationship("Area", backref="prefectures")

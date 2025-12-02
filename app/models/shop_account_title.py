@@ -1,38 +1,42 @@
-from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, func
+from sqlalchemy import Column, DateTime, Enum, ForeignKey, Integer, String, func
+from sqlalchemy.orm import relationship
 
+from app.const import AccountType
 from app.database import Base
 
 
-class Shop(Base):
-    __tablename__ = "shops"
+class ShopAccountTitle(Base):
+    __tablename__ = "shop_account_titles"
 
     id = Column(
         Integer,
         primary_key=True,
         index=True,
     )
-    region = Column(
+    shop_id = Column(
         Integer,
-        ForeignKey("regions.id"),
+        ForeignKey("shops.id"),
         nullable=False,
         index=True,
     )
-    area = Column(
-        Integer,
-        ForeignKey("areas.id"),
+    type = Column(
+        Enum(AccountType),
         nullable=False,
         index=True,
     )
-    prefecture = Column(
-        Integer,
-        ForeignKey("prefectures.id"),
-        nullable=False,
+    code = Column(
+        String(50),
+        nullable=True,
         index=True,
     )
     name = Column(
         String(255),
         nullable=False,
-        index=True,
+    )
+    order = Column(
+        Integer,
+        nullable=False,
+        default=0,
     )
     created_at = Column(
         DateTime,
@@ -45,3 +49,5 @@ class Shop(Base):
         onupdate=func.now(),
         nullable=False,
     )
+
+    shop = relationship("Shop", backref="shop_account_titles")

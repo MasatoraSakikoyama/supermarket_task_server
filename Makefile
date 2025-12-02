@@ -12,6 +12,12 @@ ifndef m
 endif
 	pipenv run alembic revision --autogenerate -m "$(m)"
 
+alembic-revision-empty:
+ifndef m
+	$(error Usage: make revision m="your migration message")
+endif
+	pipenv run alembic revision -m "$(m)"
+
 alembic-upgrade:
 ifndef rev
 	$(error Usage: make upgrade rev=<revision>)

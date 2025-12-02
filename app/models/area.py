@@ -1,19 +1,25 @@
-from sqlalchemy import Column, DateTime, Enum, Integer, String, func
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, func
+from sqlalchemy.orm import relationship
 
-from app.const import AccountType
 from app.database import Base
 
 
-class AccountTitle(Base):
-    __tablename__ = "account_titles"
+class Area(Base):
+    __tablename__ = "areas"
 
     id = Column(
         Integer,
         primary_key=True,
         index=True,
     )
-    type = Column(
-        Enum(AccountType),
+    region_id = Column(
+        Integer,
+        ForeignKey("regions.id"),
+        nullable=False,
+        index=True,
+    )
+    name = Column(
+        String(255),
         nullable=False,
         index=True,
     )
@@ -22,10 +28,6 @@ class AccountTitle(Base):
         nullable=False,
         unique=True,
         index=True,
-    )
-    name = Column(
-        String(255),
-        nullable=False,
     )
     created_at = Column(
         DateTime,
@@ -38,3 +40,5 @@ class AccountTitle(Base):
         onupdate=func.now(),
         nullable=False,
     )
+
+    region = relationship("Region", backref="areas")
