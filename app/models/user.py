@@ -11,7 +11,7 @@ class User(Base):
         primary_key=True,
         index=True,
     )
-    username = Column(
+    name = Column(
         String(255),
         nullable=False,
         unique=True,

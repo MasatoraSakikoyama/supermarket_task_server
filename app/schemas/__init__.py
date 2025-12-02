@@ -10,25 +10,23 @@ from app.schemas.auth import (
 )
 from app.schemas.health import HealthResponse
 from app.schemas.shop import (
-    ShopAccountSettlementBase,
-    ShopAccountSettlementCreate,
-    ShopAccountSettlementResponse,
-    ShopAccountSettlementUpdate,
-    ShopBase,
     ShopCreate,
     ShopResponse,
     ShopUpdate,
 )
+from app.schemas.shop_account_entry import (
+    ShopAccountEntryCreate,
+    ShopAccountEntryResponse,
+    ShopAccountEntryUpdate,
+)
 
 __all__ = [
-    "ShopBase",
     "ShopCreate",
     "ShopUpdate",
     "ShopResponse",
-    "ShopAccountSettlementBase",
-    "ShopAccountSettlementCreate",
-    "ShopAccountSettlementUpdate",
-    "ShopAccountSettlementResponse",
+    "ShopAccountDataCreate",
+    "ShopAccountDataUpdate",
+    "ShopAccountDataResponse",
     "HealthResponse",
     "LoginRequest",
     "TokenData",
