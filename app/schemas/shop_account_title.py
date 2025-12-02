@@ -4,16 +4,18 @@ from datetime import datetime
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from app.consts import AccountType
+from app.consts import AccountTitleType, AccountTitleSubType
 
 
 class ShopAccountTitleBase(BaseModel):
     """Base schema for ShopAccountTitle."""
 
     shop_id: int
-    type: AccountType
-    code: str = Field(..., max_length=50)
+    type: AccountTitleType
+    sub_type: AccountTitleSubType
+    code: str | None = Field(None, max_length=50)
     name: str = Field(..., max_length=255)
+    order: int
 
 
 class ShopAccountTitleCreate(ShopAccountTitleBase):
@@ -25,9 +27,11 @@ class ShopAccountTitleUpdate(BaseModel):
     """Schema for updating a ShopAccountTitle."""
 
     id: int
-    type: AccountType | None = None
+    type: AccountTitleType | None = None
+    sub_type: AccountTitleSubType | None = None
     code: str | None = Field(None, max_length=50)
     name: str | None = Field(None, max_length=255)
+    order: int | None = None
 
 
 class ShopAccountTitleResponse(ShopAccountTitleBase):

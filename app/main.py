@@ -8,6 +8,7 @@ from app.routers import (
     auth_router,
     health_router,
     shop_account_entry_router,
+    shop_account_title_router,
     shop_router,
 )
 
@@ -24,6 +25,7 @@ app.include_router(health_router)
 app.include_router(auth_router)
 app.include_router(shop_router)
 app.include_router(shop_account_entry_router)
+app.include_router(shop_account_title_router)
 
 # AWS Lambda handler using Mangum
 handler = Mangum(app)

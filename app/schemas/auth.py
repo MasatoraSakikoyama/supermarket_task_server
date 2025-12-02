@@ -9,7 +9,7 @@ from pydantic import BaseModel, ConfigDict, EmailStr, Field
 class UserBase(BaseModel):
     """Base schema for User."""
 
-    username: str = Field(..., min_length=3, max_length=255)
+    name: str = Field(..., min_length=3, max_length=255)
     email: EmailStr = Field(..., max_length=255)
 
 
@@ -47,4 +47,4 @@ class TokenData(BaseModel):
     """Schema for decoded token data."""
 
     user_id: Optional[int] = None
-    username: Optional[str] = None
+    user_name: Optional[str] = None

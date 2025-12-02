@@ -1,5 +1,3 @@
-"""Health check router."""
-
 from fastapi import APIRouter
 
 from app.schemas import HealthResponse

@@ -5,21 +5,21 @@ from sqlalchemy.orm import Session
 
 from app.auth import get_current_user
 from app.database import get_db
-from app.models import Shop, ShopAccountEntry, User
+from app.models import Shop, ShopAccountTitle, User
 from app.schemas import (
-    ShopAccountEntryCreate,
-    ShopAccountEntryResponse,
-    ShopAccountEntryUpdate,
+    ShopAccountTitleCreate,
+    ShopAccountTitleResponse,
+    ShopAccountTitleUpdate,
 )
 
 router = APIRouter(
-    prefix="/shop/{shop_id}/account_entry",
-    tags=["shop_account_entry"],
+    prefix="/shop/{shop_id}/account_title",
+    tags=["shop_account_title"],
 )
 
 
-@router.get("", response_model=List[ShopAccountEntryResponse])
-def get_shop_account_entry_list(
+@router.get("", response_model=List[ShopAccountTitleResponse])
+def get_shop_account_title_list(
     shop_id: int,
     limit: int = 100,
     offset: int = 0,
@@ -33,8 +33,8 @@ def get_shop_account_entry_list(
             status_code=status.HTTP_404_NOT_FOUND, detail="Shop not found"
         )
     data = (
-        db.query(ShopAccountEntry)
-        .filter(ShopAccountEntry.shop_id == shop_id)
+        db.query(ShopAccountTitle)
+        .filter(ShopAccountTitle.shop_id == shop_id)
         .offset(offset)
         .limit(limit)
         .all()
@@ -42,8 +42,8 @@ def get_shop_account_entry_list(
     return data
 
 
-@router.get("/{data_id}", response_model=ShopAccountEntryResponse)
-def get_shop_account_entry(
+@router.get("/{data_id}", response_model=ShopAccountTitleResponse)
+def get_shop_account_title(
     shop_id: int,
     data_id: int,
     db: Session = Depends(get_db),
@@ -56,29 +56,29 @@ def get_shop_account_entry(
             status_code=status.HTTP_404_NOT_FOUND, detail="Shop not found"
         )
     data = (
-        db.query(ShopAccountEntry)
+        db.query(ShopAccountTitle)
         .filter(
-            ShopAccountEntry.id == data_id,
-            ShopAccountEntry.shop_id == shop_id,
+            ShopAccountTitle.id == data_id,
+            ShopAccountTitle.shop_id == shop_id,
         )
         .first()
     )
     if data is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="ShopAccountEntry not found",
+            detail="ShopAccountTitle not found",
         )
     return data
 
 
 @router.post(
     "",
-    response_model=ShopAccountEntryResponse,
+    response_model=ShopAccountTitleResponse,
     status_code=status.HTTP_201_CREATED,
 )
-def create_shop_account_entry(
+def create_shop_account_title(
     shop_id: int,
-    data_data: ShopAccountEntryCreate,
+    data_data: ShopAccountTitleCreate,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
@@ -88,7 +88,7 @@ def create_shop_account_entry(
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Shop not found"
         )
-    data = ShopAccountEntry(
+    data = ShopAccountTitle(
         shop_id=shop_id,
         **data_data.model_dump(),
     )
@@ -98,11 +98,11 @@ def create_shop_account_entry(
     return data
 
 
-@router.put("/{data_id}", response_model=ShopAccountEntryResponse)
-def update_shop_account_entry(
+@router.put("/{data_id}", response_model=ShopAccountTitleResponse)
+def update_shop_account_title(
     shop_id: int,
     data_id: int,
-    data_data: ShopAccountEntryUpdate,
+    data_data: ShopAccountTitleUpdate,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
@@ -113,17 +113,17 @@ def update_shop_account_entry(
             status_code=status.HTTP_404_NOT_FOUND, detail="Shop not found"
         )
     data = (
-        db.query(ShopAccountEntry)
+        db.query(ShopAccountTitle)
         .filter(
-            ShopAccountEntry.id == data_id,
-            ShopAccountEntry.shop_id == shop_id,
+            ShopAccountTitle.id == data_id,
+            ShopAccountTitle.shop_id == shop_id,
         )
         .first()
     )
     if data is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="ShopAccountEntry not found",
+            detail="ShopAccountTitle not found",
         )
 
     update_data = data_data.model_dump(exclude_unset=True)
@@ -136,7 +136,7 @@ def update_shop_account_entry(
 
 
 @router.delete("/{data_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_shop_account_entry(
+def delete_shop_account_title(
     shop_id: int,
     data_id: int,
     db: Session = Depends(get_db),
@@ -149,17 +149,17 @@ def delete_shop_account_entry(
             status_code=status.HTTP_404_NOT_FOUND, detail="Shop not found"
         )
     data = (
-        db.query(ShopAccountEntry)
+        db.query(ShopAccountTitle)
         .filter(
-            ShopAccountEntry.id == data_id,
-            ShopAccountEntry.shop_id == shop_id,
+            ShopAccountTitle.id == data_id,
+            ShopAccountTitle.shop_id == shop_id,
         )
         .first()
     )
     if data is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="ShopAccountEntry not found",
+            detail="ShopAccountTitle not found",
         )
     db.delete(data)
     db.commit()

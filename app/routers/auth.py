@@ -1,5 +1,3 @@
-"""Authentication router for login and registration."""
-
 from datetime import timedelta
 
 from fastapi import APIRouter, Depends, HTTPException, status
@@ -30,7 +28,7 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 def register(user_data: UserCreate, db: Session = Depends(get_db)):
     """Register a new user."""
     # Check if username already exists
-    existing_user = db.query(User).filter(User.username == user_data.username).first()
+    existing_user = db.query(User).filter(User.name == user_data.name).first()
     if existing_user:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -48,7 +46,7 @@ def register(user_data: UserCreate, db: Session = Depends(get_db)):
     # Create new user
     hashed_password = get_password_hash(user_data.password)
     user = User(
-        username=user_data.username,
+        name=user_data.name,
         email=user_data.email,
         hashed_password=hashed_password,
     )
@@ -73,7 +71,7 @@ def login(login_data: LoginRequest, db: Session = Depends(get_db)):
     access_token_expires = timedelta(minutes=settings.jwt_access_token_expire_minutes)
     access_token = create_access_token(
         sub=str(user.id),
-        username=user.username,
+        user_name=user.name,
         expires_delta=access_token_expires,
     )
 
