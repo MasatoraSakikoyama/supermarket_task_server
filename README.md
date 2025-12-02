@@ -4,7 +4,7 @@ FastAPI application for AWS Lambda with Aurora MySQL database.
 
 ## Requirements
 
-- Python 3.12+
+- Python 3.13+
 - pipenv
 
 ## Setup
@@ -76,7 +76,7 @@ The Lambda handler is exposed as `app.main.handler`.
 ### Lambda configuration
 
 - Handler: `app.main.handler`
-- Runtime: Python 3.12
+- Runtime: Python 3.13
 
 ## API endpoints
 
