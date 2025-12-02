@@ -20,7 +20,7 @@ email-validator = "*"
 [dev-packages]
 pytest = "*"
 httpx = "*"
-uvicorn = "*"
+uvicorn = {extras = ["standard"], version = "*"}
 
 [requires]
 python_version = "3.13"

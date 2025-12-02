@@ -38,11 +38,11 @@ def get_password_hash(password: str) -> str:
 
 def create_access_token(
     sub: str,
-    username: str,
+    user_name: str,
     expires_delta: Optional[timedelta] = None,
 ) -> str:
     """Create a JWT access token."""
-    to_encode = {"sub": sub, "username": username}
+    to_encode = {"sub": sub, "user_name": user_name}
     if expires_delta:
         expire = datetime.now(timezone.utc) + expires_delta
     else:
@@ -63,10 +63,10 @@ def decode_access_token(token: str) -> Optional[TokenData]:
             token, settings.jwt_secret_key, algorithms=[settings.jwt_algorithm]
         )
         user_id: int = int(payload.get("sub"))
-        username: str = payload.get("username")
+        user_name: str = payload.get("user_name")
         if user_id is None:
             return None
-        return TokenData(user_id=user_id, username=username)
+        return TokenData(user_id=user_id, user_name=user_name)
     except jwt.ExpiredSignatureError as e:
         print("Token has expired:", e)
         return None

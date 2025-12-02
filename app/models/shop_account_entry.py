@@ -5,7 +5,7 @@ from app.database import Base
 
 
 class ShopAccountEntry(Base):
-    __tablename__ = "shop_account_entry"
+    __tablename__ = "shop_account_entries"
 
     id = Column(
         Integer,
@@ -50,4 +50,4 @@ class ShopAccountEntry(Base):
         nullable=False,
     )
 
-    shop = relationship("Shop", backref="shop_account_entry")
+    shop = relationship("Shop", backref="shop_account_entries")

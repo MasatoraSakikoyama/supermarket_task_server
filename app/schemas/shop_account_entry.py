@@ -26,6 +26,7 @@ class ShopAccountEntryUpdate(BaseModel):
     """Schema for updating a ShopAccountEntry."""
 
     id: int
+    shop_account_title_id: Optional[int] = None
     year: Optional[int] = None
     month: Optional[int] = None
     amount: Optional[float] = None

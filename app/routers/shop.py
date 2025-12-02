@@ -21,10 +21,6 @@ def get_shops(
     current_user: User = Depends(get_current_user),
 ):
     """Get all shops with pagination."""
-    print("#" * 20)
-    print(f"Current User: {current_user.username}")
-    print(offset)
-    print(limit)
     shops = db.query(Shop).offset(offset).limit(limit).all()
     return shops
 

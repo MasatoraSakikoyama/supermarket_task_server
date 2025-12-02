@@ -5,14 +5,15 @@ from typing import Optional
 
 from pydantic import BaseModel, ConfigDict, Field
 
+from app.consts import AccountPeriodType
+
 
 class ShopBase(BaseModel):
     """Base schema for Shop."""
 
-    region_id: int
-    area_id: int
-    prefecture_id: int
     name: str = Field(..., max_length=255)
+    period_type: AccountPeriodType
+    is_cumulative: bool
 
 
 class ShopCreate(ShopBase):
@@ -24,10 +25,9 @@ class ShopCreate(ShopBase):
 class ShopUpdate(BaseModel):
     """Schema for updating a Shop."""
 
-    region_id: Optional[int] = None
-    area_id: Optional[int] = None
-    prefecture_id: Optional[int] = None
     name: Optional[str] = None
+    period_type: Optional[AccountPeriodType] = None
+    is_cumulative: Optional[bool] = None
 
 
 class ShopResponse(ShopBase):

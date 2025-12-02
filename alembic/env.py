@@ -8,13 +8,8 @@ from sqlalchemy import engine_from_config, pool
 from app.config import get_settings
 from app.database import Base
 from app.models import (
-    AccountTitle,
-    Region,
-    Area,
-    Prefecture,
     Shop,
-    ShopAccountPeriod,
-    ShopAccountSettlement,
+    ShopAccountEntry,
     ShopAccountTitle,
     User,
 )  # noqa: F401 - Import models for metadata
