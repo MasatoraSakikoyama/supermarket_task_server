@@ -2,6 +2,7 @@
 
 from app.schemas.auth import (
     LoginRequest,
+    LoginResponse,
     TokenData,
     TokenResponse,
     UserBase,
@@ -29,6 +30,7 @@ __all__ = [
     "ShopAccountDataResponse",
     "HealthResponse",
     "LoginRequest",
+    "LoginResponse",
     "TokenData",
     "TokenResponse",
     "UserBase",

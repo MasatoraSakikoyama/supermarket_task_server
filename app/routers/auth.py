@@ -5,17 +5,13 @@ from datetime import timedelta
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
-from app.auth import (
-    authenticate_user,
-    create_access_token,
-    get_current_user,
-    get_password_hash,
-)
+from app.auth import (authenticate_user, create_access_token, get_current_user,
+                      get_password_hash)
 from app.config import get_settings
 from app.database import get_db
 from app.dynamodb import delete_token, store_token
 from app.models import User
-from app.schemas import LoginRequest, TokenResponse, UserCreate, UserResponse
+from app.schemas import LoginRequest, LoginResponse, UserCreate, UserResponse
 
 settings = get_settings()
 
@@ -58,9 +54,9 @@ def register(user_data: UserCreate, db: Session = Depends(get_db)):
     return user
 
 
-@router.post("/login", response_model=TokenResponse)
+@router.post("/login", response_model=LoginResponse)
 def login(login_data: LoginRequest, db: Session = Depends(get_db)):
-    """Login and get access token."""
+    """Login and get access token with user information."""
     user = authenticate_user(db, login_data.email, login_data.password)
     if not user:
         raise HTTPException(
@@ -85,7 +81,11 @@ def login(login_data: LoginRequest, db: Session = Depends(get_db)):
             detail="Failed to store token",
         )
 
-    return TokenResponse(access_token=access_token, token_type="bearer")
+    return LoginResponse(
+        access_token=access_token,
+        token_type="bearer",
+        user=UserResponse.model_validate(user),
+    )
 
 
 @router.post("/logout", status_code=status.HTTP_204_NO_CONTENT)
@@ -93,9 +93,3 @@ def logout(current_user: User = Depends(get_current_user)):
     """Logout and invalidate token."""
     delete_token(current_user.id)
     return None
-
-
-@router.get("/me", response_model=UserResponse)
-def get_me(current_user: User = Depends(get_current_user)):
-    """Get current user information."""
-    return current_user

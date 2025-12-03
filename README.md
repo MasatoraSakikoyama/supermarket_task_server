@@ -82,11 +82,10 @@ The Lambda handler is exposed as `app.main.handler`.
 
 ### Authentication (No login required)
 - `POST /auth/register` - Register a new user
-- `POST /auth/login` - Login and get access token
+- `POST /auth/login` - Login and get access token with user information
 
 ### Authentication (Login required)
 - `POST /auth/logout` - Logout and invalidate token
-- `GET /auth/me` - Get current user information
 
 ### Shops (Login required)
 - `GET /shops` - List all shops

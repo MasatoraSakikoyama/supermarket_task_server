@@ -43,6 +43,14 @@ class TokenResponse(BaseModel):
     token_type: str = "bearer"
 
 
+class LoginResponse(BaseModel):
+    """Schema for login response with token and user info."""
+
+    access_token: str
+    token_type: str = "bearer"
+    user: "UserResponse"
+
+
 class TokenData(BaseModel):
     """Schema for decoded token data."""
 
