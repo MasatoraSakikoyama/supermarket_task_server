@@ -21,6 +21,7 @@ from app.schemas.shop_account_entry import (
 )
 from app.schemas.shop_account_title import (
     ShopAccountTitleCreate,
+    ShopAccountTitleListResponse,
     ShopAccountTitleResponse,
     ShopAccountTitleUpdate,
 )
@@ -33,6 +34,7 @@ __all__ = [
     "ShopAccountEntryUpdate",
     "ShopAccountEntryResponse",
     "ShopAccountTitleCreate",
+    "ShopAccountTitleListResponse",
     "ShopAccountTitleUpdate",
     "ShopAccountTitleResponse",
     "HealthResponse",
