@@ -21,6 +21,9 @@ email-validator = "*"
 pytest = "*"
 httpx = "*"
 uvicorn = {extras = ["standard"], version = "*"}
+flake8 = "*"
+black = "*"
+isort = "*"
 
 [requires]
 python_version = "3.13"
