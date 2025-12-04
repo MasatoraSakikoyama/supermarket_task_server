@@ -35,6 +35,7 @@ def get_shop_account_title_list(
     data = (
         db.query(ShopAccountTitle)
         .filter(ShopAccountTitle.shop_id == shop_id)
+        .order_by(ShopAccountTitle.type, ShopAccountTitle.order)
         .offset(offset)
         .limit(limit)
         .all()
