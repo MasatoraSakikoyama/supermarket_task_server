@@ -30,24 +30,14 @@ def get_shop_account_title_list(
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Shop not found"
         )
-    revenues = (
+    data = (
         db.query(ShopAccountTitle)
-        .filter(
-            ShopAccountTitle.shop_id == shop_id,
-            ShopAccountTitle.type == AccountTitleType.REVENUE,
-        )
-        .order_by(ShopAccountTitle.order)
+        .filter(ShopAccountTitle.shop_id == shop_id)
+        .order_by(ShopAccountTitle.type, ShopAccountTitle.order)
         .all()
     )
-    expenses = (
-        db.query(ShopAccountTitle)
-        .filter(
-            ShopAccountTitle.shop_id == shop_id,
-            ShopAccountTitle.type == AccountTitleType.EXPENSE,
-        )
-        .order_by(ShopAccountTitle.order)
-        .all()
-    )
+    revenues = [item for item in data if item.type == AccountTitleType.REVENUE]
+    expenses = [item for item in data if item.type == AccountTitleType.EXPENSE]
     return ShopAccountTitleListResponse(revenues=revenues, expenses=expenses)
 
 
