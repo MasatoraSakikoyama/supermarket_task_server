@@ -42,3 +42,10 @@ class ShopAccountTitleResponse(ShopAccountTitleBase):
     id: int
     created_at: datetime
     updated_at: datetime
+
+
+class ShopAccountTitleListResponse(BaseModel):
+    """Schema for ShopAccountTitle list response grouped by type."""
+
+    revenues: list[ShopAccountTitleResponse]
+    expenses: list[ShopAccountTitleResponse]

@@ -1,13 +1,13 @@
-from typing import List
-
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.auth import get_current_user
+from app.consts import AccountTitleType
 from app.database import get_db
 from app.models import Shop, ShopAccountTitle, User
 from app.schemas import (
     ShopAccountTitleCreate,
+    ShopAccountTitleListResponse,
     ShopAccountTitleResponse,
     ShopAccountTitleUpdate,
 )
@@ -18,15 +18,13 @@ router = APIRouter(
 )
 
 
-@router.get("", response_model=List[ShopAccountTitleResponse])
+@router.get("", response_model=ShopAccountTitleListResponse)
 def get_shop_account_title_list(
     shop_id: int,
-    limit: int = 100,
-    offset: int = 0,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    """Get all data for a shop with pagination."""
+    """Get all data for a shop, grouped by type."""
     shop = db.query(Shop).filter(Shop.id == shop_id).first()
     if shop is None:
         raise HTTPException(
@@ -35,11 +33,12 @@ def get_shop_account_title_list(
     data = (
         db.query(ShopAccountTitle)
         .filter(ShopAccountTitle.shop_id == shop_id)
-        .offset(offset)
-        .limit(limit)
+        .order_by(ShopAccountTitle.type, ShopAccountTitle.order)
         .all()
     )
-    return data
+    revenues = [item for item in data if item.type == AccountTitleType.REVENUE]
+    expenses = [item for item in data if item.type == AccountTitleType.EXPENSE]
+    return ShopAccountTitleListResponse(revenues=revenues, expenses=expenses)
 
 
 @router.get("/{data_id}", response_model=ShopAccountTitleResponse)
