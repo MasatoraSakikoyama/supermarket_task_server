@@ -6,42 +6,31 @@ from typing import Optional
 from pydantic import BaseModel, ConfigDict
 
 
-class ShopAccountEntryBase(BaseModel):
+class ShopAccountEntry(BaseModel):
     """Base schema for ShopAccountEntry."""
 
+    id: Optional[int] = None
     shop_id: int
-    shop_account_title_id: int
+    shop_account_title_id: Optional[int] = None
     year: int
     month: int
-    amount: float
-
-
-class ShopAccountEntryCreate(ShopAccountEntryBase):
-    """Schema for creating a ShopAccountEntry."""
-
-    pass
-
-
-class ShopAccountEntryUpdate(BaseModel):
-    """Schema for updating a ShopAccountEntry."""
-
-    id: int
-    shop_account_title_id: Optional[int] = None
-    year: Optional[int] = None
-    month: Optional[int] = None
     amount: Optional[float] = None
-
-
-class ShopAccountEntryResponse(ShopAccountEntryBase):
-    """Schema for ShopAccountEntry response."""
 
     model_config = ConfigDict(from_attributes=True)
 
-    id: int
-    shop_id: int
-    shop_account_title_id: int
+
+class ShopAccountEntryRequest(BaseModel):
+    """Schema for creating a ShopAccountEntry."""
+
     year: int
-    month: int
-    amount: float
-    created_at: datetime
-    updated_at: datetime
+    revenues: list[list[ShopAccountEntry]]
+    expenses: list[list[ShopAccountEntry]]
+
+
+class ShopAccountEntryResponse(BaseModel):
+    """Schema for ShopAccountEntry response."""
+
+    headers: list[str]
+    revenues: list[list[ShopAccountEntry]]
+    expenses: list[list[ShopAccountEntry]]
+

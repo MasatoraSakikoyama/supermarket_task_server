@@ -1,4 +1,6 @@
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, func, Boolean
+from sqlalchemy.orm import relationship
+
 
 from app.consts import AccountPeriodType
 from app.models.types import IntEnumType
@@ -39,3 +41,6 @@ class Shop(Base):
         onupdate=func.now(),
         nullable=False,
     )
+
+    shop_account_titles = relationship("ShopAccountTitle", back_populates="shop", cascade="all, delete-orphan")
+    shop_account_entries = relationship("ShopAccountEntry", back_populates="shop", cascade="all, delete-orphan")

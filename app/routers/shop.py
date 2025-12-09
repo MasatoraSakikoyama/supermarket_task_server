@@ -77,20 +77,3 @@ def update_shop(
     db.commit()
     db.refresh(shop)
     return shop
-
-
-@router.delete("/{shop_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_shop(
-    shop_id: int,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user),
-):
-    """Delete a shop."""
-    shop = db.query(Shop).filter(Shop.id == shop_id).first()
-    if shop is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Shop not found"
-        )
-    db.delete(shop)
-    db.commit()
-    return None

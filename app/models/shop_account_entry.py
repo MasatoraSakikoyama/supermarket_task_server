@@ -50,4 +50,5 @@ class ShopAccountEntry(Base):
         nullable=False,
     )
 
-    shop = relationship("Shop", backref="shop_account_entries")
+    shop = relationship("Shop", back_populates="shop_account_entries")
+    shop_account_title = relationship("ShopAccountTitle", back_populates="shop_account_entries")

@@ -56,4 +56,5 @@ class ShopAccountTitle(Base):
         nullable=False,
     )
 
-    shop = relationship("Shop", backref="shop_account_titles")
+    shop = relationship("Shop", back_populates="shop_account_titles")
+    shop_account_entries = relationship("ShopAccountEntry", back_populates="shop_account_title", cascade="all, delete-orphan")

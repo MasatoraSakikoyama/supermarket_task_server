@@ -6,10 +6,8 @@ from app.consts import AccountTitleType
 from app.database import get_db
 from app.models import Shop, ShopAccountTitle, User
 from app.schemas import (
-    ShopAccountTitleCreate,
-    ShopAccountTitleListResponse,
+    ShopAccountTitleRequest,
     ShopAccountTitleResponse,
-    ShopAccountTitleUpdate,
 )
 
 router = APIRouter(
@@ -18,7 +16,7 @@ router = APIRouter(
 )
 
 
-@router.get("", response_model=ShopAccountTitleListResponse)
+@router.get("", response_model=ShopAccountTitleResponse)
 def get_shop_account_title_list(
     shop_id: int,
     db: Session = Depends(get_db),
@@ -30,54 +28,25 @@ def get_shop_account_title_list(
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Shop not found"
         )
-    data = (
+    models = (
         db.query(ShopAccountTitle)
         .filter(ShopAccountTitle.shop_id == shop_id)
         .order_by(ShopAccountTitle.type, ShopAccountTitle.order)
         .all()
     )
-    revenues = [item for item in data if item.type == AccountTitleType.REVENUE]
-    expenses = [item for item in data if item.type == AccountTitleType.EXPENSE]
-    return ShopAccountTitleListResponse(revenues=revenues, expenses=expenses)
+    revenues = [model for model in models if model.type == AccountTitleType.REVENUE]
+    expenses = [model for model in models if model.type == AccountTitleType.EXPENSE]
 
-
-@router.get("/{data_id}", response_model=ShopAccountTitleResponse)
-def get_shop_account_title(
-    shop_id: int,
-    data_id: int,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user),
-):
-    """Get a single data by ID for a shop."""
-    shop = db.query(Shop).filter(Shop.id == shop_id).first()
-    if shop is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Shop not found"
-        )
-    data = (
-        db.query(ShopAccountTitle)
-        .filter(
-            ShopAccountTitle.id == data_id,
-            ShopAccountTitle.shop_id == shop_id,
-        )
-        .first()
-    )
-    if data is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="ShopAccountTitle not found",
-        )
-    return data
+    return ShopAccountTitleResponse(revenues=revenues, expenses=expenses)
 
 
 @router.post(
     "",
-    response_model=ShopAccountTitleResponse,
     status_code=status.HTTP_201_CREATED,
 )
-def create_shop_account_title(
+def bulk_delete_and_create_shop_account_title(
     shop_id: int,
-    data_data: ShopAccountTitleCreate,
+    data: ShopAccountTitleRequest,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
@@ -87,79 +56,29 @@ def create_shop_account_title(
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Shop not found"
         )
-    data = ShopAccountTitle(
-        shop_id=shop_id,
-        **data_data.model_dump(),
-    )
-    db.add(data)
-    db.commit()
-    db.refresh(data)
-    return data
 
-
-@router.put("/{data_id}", response_model=ShopAccountTitleResponse)
-def update_shop_account_title(
-    shop_id: int,
-    data_id: int,
-    data_data: ShopAccountTitleUpdate,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user),
-):
-    """Update an existing data for a shop."""
-    shop = db.query(Shop).filter(Shop.id == shop_id).first()
-    if shop is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Shop not found"
-        )
-    data = (
+    (
         db.query(ShopAccountTitle)
-        .filter(
-            ShopAccountTitle.id == data_id,
-            ShopAccountTitle.shop_id == shop_id,
-        )
-        .first()
+        .filter(ShopAccountTitle.shop_id == shop_id)
+        .delete()
     )
-    if data is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="ShopAccountTitle not found",
+
+    models = []
+    for data in data.revenues + data.expenses:
+        # TODO: data.codeで判定する
+        if not data.name:
+            continue
+
+        models.append(
+            ShopAccountTitle(
+                shop_id=shop_id,
+                type=data.type,
+                sub_type=data.sub_type,
+                code=data.code,
+                name=data.name,
+                order=data.order,
+            )
         )
 
-    update_data = data_data.model_dump(exclude_unset=True)
-    for field, value in update_data.items():
-        setattr(data, field, value)
-
+    db.add_all(models)
     db.commit()
-    db.refresh(data)
-    return data
-
-
-@router.delete("/{data_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_shop_account_title(
-    shop_id: int,
-    data_id: int,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user),
-):
-    """Delete a data for a shop."""
-    shop = db.query(Shop).filter(Shop.id == shop_id).first()
-    if shop is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Shop not found"
-        )
-    data = (
-        db.query(ShopAccountTitle)
-        .filter(
-            ShopAccountTitle.id == data_id,
-            ShopAccountTitle.shop_id == shop_id,
-        )
-        .first()
-    )
-    if data is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="ShopAccountTitle not found",
-        )
-    db.delete(data)
-    db.commit()
-    return None

@@ -1,51 +1,36 @@
 """Pydantic schemas for shop request/response validation."""
 
 from datetime import datetime
+from typing import Optional
 
 from pydantic import BaseModel, ConfigDict, Field
 
 from app.consts import AccountTitleType, AccountTitleSubType
 
 
-class ShopAccountTitleBase(BaseModel):
+class ShopAccountTitle(BaseModel):
     """Base schema for ShopAccountTitle."""
 
+    id: Optional[int] = None
     shop_id: int
     type: AccountTitleType
     sub_type: AccountTitleSubType
-    code: str | None = Field(None, max_length=50)
-    name: str = Field(..., max_length=255)
+    code: Optional[str] = Field(None, max_length=50)
+    name: Optional[str] = Field(None, max_length=255)
     order: int
-
-
-class ShopAccountTitleCreate(ShopAccountTitleBase):
-    """Schema for creating a ShopAccountTitle."""
-
-    pass
-
-class ShopAccountTitleUpdate(BaseModel):
-    """Schema for updating a ShopAccountTitle."""
-
-    id: int
-    type: AccountTitleType | None = None
-    sub_type: AccountTitleSubType | None = None
-    code: str | None = Field(None, max_length=50)
-    name: str | None = Field(None, max_length=255)
-    order: int | None = None
-
-
-class ShopAccountTitleResponse(ShopAccountTitleBase):
-    """Schema for ShopAccountTitle response."""
 
     model_config = ConfigDict(from_attributes=True)
 
-    id: int
-    created_at: datetime
-    updated_at: datetime
+
+class ShopAccountTitleRequest(BaseModel):
+    """Schema for ShopAccountTitle response."""
+
+    revenues: list[ShopAccountTitle]
+    expenses: list[ShopAccountTitle]
 
 
-class ShopAccountTitleListResponse(BaseModel):
-    """Schema for ShopAccountTitle list response grouped by type."""
+class ShopAccountTitleResponse(BaseModel):
+    """Schema for ShopAccountTitle response."""
 
-    revenues: list[ShopAccountTitleResponse]
-    expenses: list[ShopAccountTitleResponse]
+    revenues: list[ShopAccountTitle]
+    expenses: list[ShopAccountTitle]

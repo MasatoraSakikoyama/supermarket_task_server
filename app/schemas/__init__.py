@@ -15,27 +15,21 @@ from app.schemas.shop import (
     ShopUpdate,
 )
 from app.schemas.shop_account_entry import (
-    ShopAccountEntryCreate,
+    ShopAccountEntryRequest,
     ShopAccountEntryResponse,
-    ShopAccountEntryUpdate,
 )
 from app.schemas.shop_account_title import (
-    ShopAccountTitleCreate,
-    ShopAccountTitleListResponse,
+    ShopAccountTitleRequest,
     ShopAccountTitleResponse,
-    ShopAccountTitleUpdate,
 )
 
 __all__ = [
     "ShopCreate",
     "ShopUpdate",
     "ShopResponse",
-    "ShopAccountEntryCreate",
-    "ShopAccountEntryUpdate",
+    "ShopAccountEntryRequest",
     "ShopAccountEntryResponse",
-    "ShopAccountTitleCreate",
-    "ShopAccountTitleListResponse",
-    "ShopAccountTitleUpdate",
+    "ShopAccountTitleRequest",
     "ShopAccountTitleResponse",
     "HealthResponse",
     "LoginRequest",
